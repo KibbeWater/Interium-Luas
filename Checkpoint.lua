@@ -1,1 +1,87 @@
-RL)\˜‚–%n”ƒ!:stp…X€›Œƒw›8B)%iu’6~r‰n„}†F@[“‹}<€œa“Ši-Fm…˜<Qzpk–r©-HgˆeusgNNu‹Š}¡†n><":}a„ƒfvur—ˆ¡–›”˜N2M•…{M ;`‡†£VR}uyq ¨<+hƒejš††‡€wArp”E=70w[xz“|I‹iv¡˜”Š|z~y),(›zŠY7*hlŠ¢6ep£YŽw:I‚Œ{$jy‘‘sœ}€ £4H3.ŠKjw ukœ›i{v$>/NFP5Rxš€4`|¥frŠpT:V…Šš$gilr¢˜—{zFV>MpcŒj„zŽxoX‰‚Ž@YM\WU13^“’:{¥dxmH6]†}q¦y2a~Šˆu”‰ŒID"9Lih{ƒ›ƒ‡˜gi›˜¤,U+fDK;!0Qˆv„sf„}“„8,Ÿ‡z”Kmt„ƒg•”GQHor|n’“[œ–©GYJ SV(1:%"%,ƒ‹h‘>ym•g¢je’šGl-eri„’]“y˜KAH.2FOC@$3‡ˆ†Žz1†™h{utuvK“PX4u“„ˆv£EyT;6;1/EY)(:Ž”ˆ˜Dz‘•Š–uqo~šgo:LA|n…s˜•z’žq‘“BQt“€¦[”‚žyzw€KY:29FQF2=s{ž¡;it¢q‚‚…†™t“z =)-Dg•—~`|h‰p{y(;ps†‚~ˆ†‰zxP’Š˜‡t–‹™w;O4yR‹Œgƒq~rBn š†ŠŠƒ19$VC:!9=?up ŸS“vtŒŸ‰˜|>NK“rfqŸ|}špsl‚’os…Šv;-?|q‚ƒ‹l”ŽPŒŠ„ˆywŒoŠxp‰3MVM+S"D"FN"‹€•“€u†ŒŸPožK{H]P=>B-5RE)h“’w‡’ƒˆœŸVzŒY†1FE7'K=I4F%q†‰”–™x‚Št€Ÿ”R©LUT:FD*2;OMmŒ–…q ”|P‰n<53VA?U/*:U*v‰–~¢“˜Gt™=‚A*-06NK-Ott6QŸ˜Jj~¤J|ž“I'dJ–xivy]y„gž‡}yx8VRs’0z‘‡€Š0S¤t‚me‚ƒ1QUPth‘†;&@K+44$'AGCep|>e‡Žzu‹y™‹6<..0( KQitBr…x…‚‚ž¡BjubxŒ‡s5eˆ›wGrn„c˜yUMvH—n•rˆ¡{q‡}}1EJ@H„’‘‘#!''BN1D7HI?F5Œˆf‰*œXŠ€pl<?B]EvŠ“£‡cš‚¡@HŠ}s–iuH[KŠ”q€o.Yx€`qkf}a¤mz/7;2%:(H;( !+P8;)E‰vf†}w“ ¦~’=I;’_u‘~It{wq‹vnrrzw9S-.8PRB:@Q<K1F?‚ozhwž‰jƒtIq-b>uƒts’Zž†”Nu¢›r†‰UolVtv‰q3Bƒ~ŒnŸP“„4—‰‰\P1+>4M2K9D@5+=1HGm…ws‘ytzŸSp{9]EŸ•zz'-,AN**93Œ›•-5 >N(C$?GGH]šž›Jq•‚x™s‘u7 Q@=(B0*!xˆ=V•‘‚•Y¦K`’r‚™u›r„…Ps|s>io¤dv‘?4zbo‰…|”y’vux€7HD hj0…’u•‡ž{•“~zˆ‹,L¢pŠs9(3H*%.#R5+IKvFkŒ~{?G‹y£‡•r{‘~~†F‘9;ƒz›‰€i‰–ac|5A .P6‘”c–”r†¡\„9¥6@6"O.C<]@PŒˆw‘†g}†Y JG4C+(E9>B?‚|wzu}}…™Ÿ_•¢U¬32(-67<?7=G/RDJd_„…‘€sQTxhŸ“ƒiŒ†”¢\}z8I¡›…}t”¡yœ/'&?<.oŠŒ˜”|œ†cx‚T™IXA8S+>C:8;qˆhˆ|’˜lŠ–q D:2G<PR'>B63;2<| w„™YMxˆ˜™j—‘ŠmD,RRD:whˆzyŠuHqŽZ~“pˆ+>46OF&*/=-y„s•xšq‰¦sˆH€kŽL(81G1@@H"‘‰ƒ6&;/%H?(LC.&<K}‘…—™eHp™ql”…„vv8"O%<HD=4DilI_r“~¦[|Ÿ<u…x„}|t|{UT‰…>Iz{z‚z6;ƒqlwp{žzvo‹Ž45R?,‡kht" #4+O7-F+4F7{i„–zm˜Œj{šPE$˜„…“–9:C6@BM*=N~y’"?$;:"%)2 F@-();Ch?”hs†Œt|€›“\‹{H¦…„‚,CEH$K,$.?G%*–|ey…H™‘?M:‹pk•–€w  €œy'.C69KG6R!-/#|ˆq‡†Gš„§zg‘+B#p†q¤“›0 i‘9HP#P,C^=(49LN5M/GEEL/M˜rs=C|‘˜Yogt?=G^‡j’K‚ƒr}–@y‡‹=K/5R5O&"5"-BRKB’ipsŸl~M‰|‹q~“>_=b21FG+<DH;N$)A-co}{TŒuŒHq|¢{”UŒ†Œ‚o›y?hL>›‡l…g^w¢x˜Œyr‘Ÿ…UMmŒ?$2-N1QN+?$(Oqzcˆk’5wjŽrtm‚Š]|{r¡3_8W7;.LN$*(/)KQB6&khbŸ[–‚A‰yuœ`‚‡b{yo—#Z:HBJ4/#($-4O<B$G If‘IŸ}•Gƒ„jžaŽ{€=L4DEQ7 9*FG73 ;>)Isp‰Š{‹f’8‰ao|e‰£|Oh:IL76@E/=;K!#MM%Ns‰’{œ’rA–qU‹Š…jp~HT5BPR,>G) -),@'88$K‘‡sfw†.spjŽrˆw‰ogŸ|ˆ5iO5_b&<K.0COF5*%/*K\–ˆm\Ÿ•|[—yƒrNƒ¢‚Ÿ„€|GdDFI]-P3!:GEO=.&Kg’}}p‹šM“‚’vN“miŠ–u€&BP38['3HQ,<(3I5.+%Xs|pk‰‰ 5Ÿ€Ž”… nnrDS+3;+IDJRC6=%6K>Pr‹tœk{ƒ‹?Šn›„¢€–r“—o>n(P.$)G'P/F6J)&FAlg„Žk…xsJ}`k›f”ƒe`m}/i?a8$2HD5N:A/E&7NB„f’Rv‰•8˜c”zƒlL=?S`f9/.!"P(N(+A:$K€‹oL~Œ}6•rmˆf‘~‹ƒ%G"Ug`" $FMQ3D)"1RdfŒnht€‘ZyvvŽa{ž(>.Cc6(**%6EMQ.OOJ2Neij“mŒoVw™S„‹r‚…‘CA-I655<C5G(/+GR=ixe•_… Oputk€‚j€u†‰fQoOžz†$N"'.?Q3JG 8=Br}‡T›ro^…m—Y‘ct)C#=-CL4".'#*7 -Abz}wm|ˆMt`|jrl™o¤—FgM}›¤)'NI3GKL@=0I's{‡}l‰f‚Wtišnip‡€FHIbs|˜’:q•1~o€[|J)‘Ž€E«<9z”—GŽ@1)7^U@T09!<:8/7AN23?8‰Žtcn s‰‹t/fOSwp–i’R”cv–ZD’ihŠ–f‚|šTv“‹‚Œ+D}|žK‚j2=!=(E0$08$!*(|vce—<…xŸtt„0A3PL‰j¦£O}s›OwˆyQŽ–•£P]Hš„€lOO–¤|“‹†n€“y{M>Z=5/Q4=28/OGF&J8‘¡}gŠ6¡‰{“|zr‡=NK^jx•‡}Bqj„1•žœ?€OJ”|†:“/(qŒA›E>(DR:8>1*J%4 2>RQ@„u„J‘qy5[2a‚ŒIZpvzž£F€”z“3…t‚/(L‰Š†œYT‚—E{„e}ˆ‰–NI.89(;!?/$0&$9?.xs8S‘ Š@z„uqƒ€‹zlsoB˜‰ž‰do-Iu€™€‹ŒW%|jH]œ„\Zvˆoœ‡V;gH•r~‡^…~nš€vžˆ{e˜£MPF(‰q—2%@J%=E5+9%0).27L.uhpkw„8‚z’ ‘CGMKƒnƒ‹š‚šŒ€‘2!FL,‹‡‘vAg„wxAhŒ¡Ÿ9E:X+IJ¦ŸŠ£š4…'œ}¢,5P¥‡œy…¤`ˆ,O –“zZ¤.‘I-=M8ED•šwLf†L^7FM<^V]2U_CD<IX0E|…Œ\Q{{‚’.9.9D<9?G&N:5<k{xJ *F>KE,v€u!5'30f…?,p–o$8`mt0Xf—…}‘‹¢gd‹ˆ”†vrOMmr™}Ž‡–†¡”Š,E&f‚}Ž’y–’yy—ƒr,?-+#&j’‚‹•—†s&i€pp|on‹‘†Rws<%|’‚‡vx{”x0*%BOG|™ƒ“r„M†}.aIŠ]Œ}’z nŒ…($‘’\hwŽORx…sŠŒƒ”rcšqv€}€U'_€{}stš{…"B4`zd}‡TxœŽW9A
+-- Init Menu
+Menu.Spacing()
+Menu.Separator()
+Menu.Spacing()
+Menu.Checkbox("Enable Checkpoint", "cEnableCheckpoint", true)
+Menu.Checkbox("Checkpoint Text", "cEnableCheckpointText", true)
+Menu.KeyBind("Set Checkpoint", "cCheckpointSet", 67)
+Menu.KeyBind("Goto Checkpoint", "cCheckpointGoto", 220)
+Menu.KeyBind("Remove Checkpoint", "cCheckpointRemove", 70)
+
+--Variables
+local currentAng = QAngle.new(0, 0, 0)
+
+local checkpointPos = Vector.new(0, 0, 0)
+local checkpointAng = Vector.new(0, 0, 0)
+local checkpointSet = false
+
+function PaintTraverse() 
+    --Cross Compatibility
+    Menu.SetInt("CheckpointModuleExists", IGlobalVars.curtime + 1)
+    Menu.SetString("CheckpointModuleData", tostring(checkpointSet) .. " " .. checkpointPos.x .. "," .. checkpointPos.y .. "," .. checkpointPos.z .. " " .. checkpointAng.x .. "," .. checkpointAng.y)
+
+    if(Menu.GetBool("cEnableCheckpoint") and Utils.IsInGame()) then
+        --Set Checkpoint
+        if(InputSys.IsKeyPress(Menu.GetInt("cCheckpointSet"))) then
+            local pLocal = IEntityList.GetPlayer(IEngine.GetLocalPlayer()) 
+            checkpointPos = pLocal:GetAbsOrigin()
+            checkpointAng = Vector.new(currentAng.pitch, currentAng.yaw, 0)
+            checkpointSet = true
+        end
+
+        --Goto Checkpoint
+        if(InputSys.IsKeyPress(Menu.GetInt("cCheckpointGoto")) and checkpointSet) then
+            IEngine.ExecuteClientCmd("setpos_exact " .. checkpointPos.x .. " " .. checkpointPos.y .. " " .. checkpointPos.z)
+            IEngine.ExecuteClientCmd("setang_exact " .. checkpointAng.x .. " " .. checkpointAng.y)
+            Print("setang_exact " .. checkpointAng.pitch .. " " .. checkpointAng.yaw)
+        end
+
+        --Remove Checkpoint
+        if(InputSys.IsKeyPress(Menu.GetInt("cCheckpointRemove"))) then
+            checkpointSet = false
+        end
+        
+        if checkpointSet then
+            local pos = checkpointPos
+            local textPos = Vector.new(0, 0, 0)
+
+            local BeamInfo = BeamInfo_t.new()
+            BeamInfo.m_nType = 0
+            BeamInfo.m_pszModelName = "sprites/purplelaser1.vmt"
+            BeamInfo.m_nModelIndex = -1
+            BeamInfo.m_flHaloScale = 0.0
+            BeamInfo.m_flLife = 0.1
+            BeamInfo.m_flWidth = 5.0
+            BeamInfo.m_flEndWidth = 3.0
+            BeamInfo.m_flFadeLength = 0.0
+            BeamInfo.m_flAmplitude = 2.0
+            BeamInfo.m_flBrightness = 255
+            BeamInfo.m_flSpeed = 0
+            BeamInfo.m_nStartFrame = 0
+            BeamInfo.m_flFrameRate = 0
+            BeamInfo.m_flRed = 255
+            BeamInfo.m_flGreen = 255
+            BeamInfo.m_flBlue = 255
+            BeamInfo.m_nSegments = 2
+            BeamInfo.m_bRenderable = true
+            BeamInfo.m_nFlags = 0
+            BeamInfo.m_vecStart = pos
+            BeamInfo.m_vecEnd = Vector.new(pos.x, pos.y, pos.z + 1000)
+
+            local Beam = IRenderBeams.CreateBeamPoints(BeamInfo)
+            local pLocal = IEntityList.GetPlayer(IEngine.GetLocalPlayer()) 
+            local textWPos = Vector.new(pos.x, pos.y, pos.z + 70)
+            local dist = Math.VectorDistance(pos, pLocal:GetAbsOrigin())
+
+            if(Math.WorldToScreen(textWPos, textPos) and Menu.GetBool("cEnableCheckpointText")) then
+                Render.Text_1("Checkpoint\n" .. math.floor(dist) .. " units to target", textPos.x, textPos.y, 20, Color.new(200,200,200,255), true, false)
+            end
+        end
+    end
+end
+Hack.RegisterCallback("PaintTraverse", PaintTraverse)  
+
+function CreateMove(cmd, sendPacket)
+    currentAng = cmd.viewangles
+end
+Hack.RegisterCallback("CreateMove", CreateMove)  
