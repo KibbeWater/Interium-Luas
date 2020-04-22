@@ -25,7 +25,8 @@
 ## Coming Soon
 
 ### Planned **Private** Releases
-* Movement Helper - Show points on screen where you can start your movement clip!
+* Movement Helper - Show points around you where you can start your movement clip!
 
 ### Planned **Public** Release
 * KibbeWater UI Library - An advanced UI Library for lua developers to more easily create and manage UI elements
+* Smoke / Nade Helper - Show points around you where you can throw nades / smokes
