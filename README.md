@@ -2,10 +2,10 @@
 
 ## Goals
 - [x] Become "Lua Maker"
-- [ ] Become "Lua God"
+- [X] Become "Lua God"
+- [X] Publish First Public Lua
 - [ ] Finish 5 Luas
 - [ ] Finish 10 Luas
-- [ ] Publish First Public Lua
 
 ## Ideas?
 - If you have an idea please submit them to me on Discord. **@KibbeWater#1234**
@@ -15,7 +15,7 @@
 [Interium](https://interium.ooo/) is a legit cheat in CS:GO with a fantastic LUA Api
 
 ## Public
-* Checkpoint (Releasing 3:30 PM GMT) - Set a checkpoint to teleport back to at any time
+* Checkpoint - Set a checkpoint to teleport back to at any time
 
 ## Private
 * WaterUI - Custom UI with custom Cross-Compatibility
