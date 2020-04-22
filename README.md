@@ -15,7 +15,7 @@
 [Interium](https://interium.ooo/) is a legit cheat in CS:GO with a fantastic LUA Api
 
 ## Public
-* Checkpoint (Releasing 4 PM GMT) - Set a checkpoint to teleport back to at any time
+* Checkpoint (Releasing 3:30 PM GMT) - Set a checkpoint to teleport back to at any time
 
 ## Private
 * WaterUI - Custom UI with custom Cross-Compatibility
@@ -30,3 +30,4 @@
 ### Planned **Public** Release
 * KibbeWater UI Library - An advanced UI Library for lua developers to more easily create and manage UI elements
 * Smoke / Nade Helper - Show points around you where you can throw nades / smokes
+* Buy Logger - Print in chat what you enemies are buying!
