@@ -7,6 +7,12 @@
 - [ ] Finish 5 Luas
 - [ ] Finish 10 Luas
 
+## More Important Goals (very serious)
+- [ ] Become "Moderator"
+- [ ] Become "Admin"
+- [ ] Become "Owner"
+- [ ] Recieve access to the entire interium network and take over the world
+
 ## Ideas?
 - If you have an idea please submit them to me on Discord. **@키베물#1234**
 - If I decide to make it I'll add it to my github and you will recieve an encrypted copy
