@@ -12,7 +12,7 @@
 - If I decide to make it I'll add it to my github and you will recieve an encrypted copy
 
 ## What is Interium?
-[Interium](https://interium.ooo/) is a legit cheat in CS:GO with a fantastic LUA Api
+[Interium](https://interium.ooo/forum/member.php?action=register&referrer=16) is a legit cheat in CS:GO with a fantastic LUA Api
 
 ## Public
 * Checkpoint - Set a checkpoint to teleport back to at any time
