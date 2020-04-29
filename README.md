@@ -34,3 +34,4 @@
 * KibbeWater UI Library - An advanced UI Library for lua developers to more easily create and manage UI elements
 * Smoke / Nade Helper - Show points around you where you can throw nades / smokes
 * Buy Logger - Print in chat what you enemies are buying!
+* Health Glow - Changes player glow depending on player HP
