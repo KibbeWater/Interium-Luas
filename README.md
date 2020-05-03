@@ -16,6 +16,7 @@
 
 ## Public
 * Checkpoint - Set a checkpoint to teleport back to at any time
+* Spectator List - Just a fancier version then the (non-beta (lol nn)) spectator list
 
 ## Private
 * WaterUI - Custom UI with custom Cross-Compatibility
