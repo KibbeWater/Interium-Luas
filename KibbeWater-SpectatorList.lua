@@ -6,6 +6,7 @@ Menu.Checkbox("Enable Speclist", "cEnableSpeclistPublic", true)
 Menu.Checkbox("Enable RGB", "cEnableSpeclistRGB", true)
 Menu.ColorPicker("Speclist Color", "cSpeclistColor", 255, 255, 255, 255)
 Menu.Combo( "", "cSpecDesign", { "Sown" }, 0)
+Menu.SliderInt("Size", "cPosSize", 1, 50, "", 27)
 
 --Setup Fonts
 URLDownloadToFile("https://cdn.discordapp.com/attachments/655694082525364254/700274099775078410/Sunflower.ttf", GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Sunflower.ttf")
@@ -54,6 +55,11 @@ function Paint()
     else
         BuildSpecList(FindTarget())
     end
+
+    --Set Size 
+    sizeY = Menu.GetInt("cPosSize")
+    sizeX = sizeY * 6.481481481481481
+
     if Menu.GetInt("cSpecDesign") == 0 then --Sown
 
         --RGB first cuz fucking priority rendering ZZZ (extra's rainbow gay pride rgb lua (too lazy to do calculations (I HATE DOING RGB)))
@@ -81,8 +87,8 @@ function Paint()
         Render.RectFilled(posX, posY, posX + sizeX, posY + sizeY, Color.new(0,0,0,255), 0)
 
         --Render Speclist Text
-        local textYSize = Render.CalcTextSize("Spectator List", 18, "sunflowerrr").y / 5
-        Render.Text("Spectator List", posX + (sizeX / 2), posY + textYSize, 18, Color.new(255,255,255,255), true, true, "sunflowerrr")
+        local textYSize = Render.CalcTextSize("Spectator List", sizeY * 0.6666666666666667, "sunflowerrr").y / 2
+        Render.Text("Spectator List", posX + (sizeX / 2), (posY + (sizeY / 2)) - textYSize, sizeY * 0.6666666666666667, Color.new(255,255,255,255), true, true, "sunflowerrr")
 
         --Dragging System
         local cursor = InputSys.GetCursorPos()
@@ -133,8 +139,8 @@ function Paint()
         extensionSizeY = 0
         for i = 1, #fakeNames do
             extensionSizeY = extensionSizeY + 2
-            Render.Text(fakeNames[i], posX + 6, ((posY + sizeY)) + extensionSizeY, 17, Color.new(255,255,255,255), false, true, "sunflowerrr")
-            extensionSizeY = extensionSizeY + Render.CalcTextSize(fakeNames[i], 15, "sunflowerrr").y
+            Render.Text(fakeNames[i], posX + 6, ((posY + sizeY)) + extensionSizeY, sizeY * 0.6296296296296296, Color.new(255,255,255,255), false, true, "sunflowerrr")
+            extensionSizeY = extensionSizeY + Render.CalcTextSize(fakeNames[i], sizeY * 0.6296296296296296, "sunflowerrr").y
         end
 
         --Coderman optimize b4 release
