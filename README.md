@@ -4,7 +4,7 @@
 - [x] Become "Lua Maker"
 - [X] Become "Lua God"
 - [X] Publish First Public Lua
-- [ ] Finish 5 Luas
+- [X] Finish 5 Luas
 - [ ] Finish 10 Luas
 
 ## Ideas?
@@ -20,7 +20,6 @@
 
 ## Private
 * WaterUI - Custom UI with custom Cross-Compatibility
-* Edgebug Detection - Detect Edgebugs with pinpoint accuracy and play a sound
 * Music Display - With custom Cross-Compatibility with WaterUI for displaying your current spotify song
 
 ## Coming Soon
@@ -36,3 +35,4 @@
 * Buy Logger - Print in chat what you enemies are buying!
 * Health Glow - Changes player glow depending on player HP
 * Interium Plus - Add more customizability like toggles custom background fade when opening menu and more
+* Edgebug Detection - Detect Edgebugs with pinpoint accuracy and play a sound
