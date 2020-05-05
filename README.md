@@ -17,6 +17,9 @@
 ## Public
 * Checkpoint - Set a checkpoint to teleport back to at any time
 * Spectator List - Just a fancier version then the (non-beta (lol nn)) spectator list
+* Edgebug Detection - Detect Edgebugs with pinpoint accuracy and play a sound
+* WaterUI - Custom UI with custom Cross-Compatibility
+* Music Display - With custom Cross-Compatibility with WaterUI for displaying your current spotify song
 
 ## Private
 * BetaSpectatorList.lua - containing multiple designs made for friends etc
@@ -34,6 +37,3 @@
 * Buy Logger - Print in chat what you enemies are buying!
 * Health Glow - Changes player glow depending on player HP
 * Interium Plus - Add more customizability like toggles custom background fade when opening menu and more
-* Edgebug Detection - Detect Edgebugs with pinpoint accuracy and play a sound
-* WaterUI - Custom UI with custom Cross-Compatibility
-* Music Display - With custom Cross-Compatibility with WaterUI for displaying your current spotify song
