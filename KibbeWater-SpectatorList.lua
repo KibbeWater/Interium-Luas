@@ -8,6 +8,18 @@ Menu.ColorPicker("Speclist Color", "cSpeclistColor", 255, 255, 255, 255)
 Menu.Combo( "", "cSpecDesign", { "Sown" }, 0)
 Menu.SliderInt("Size", "cPosSize", 1, 50, "", 27)
 
+--idk is essential upp here
+function Split (inputstr, sep)
+    if sep == nil then
+            sep = "%s"
+    end
+    local t={}
+    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+            table.insert(t, str)
+    end
+    return t
+end
+
 --Setup Fonts
 URLDownloadToFile("https://cdn.discordapp.com/attachments/655694082525364254/700274099775078410/Sunflower.ttf", GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Sunflower.ttf")
 Render.LoadFont("sunflowerrr", GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Sunflower.ttf", 30)
@@ -22,24 +34,29 @@ local obsTargetOffset = Hack.GetOffset("DT_BasePlayer", "m_hObserverTarget")
 
 --Global Vars
 local pLocal = IEntityList.GetPlayer(IEngine.GetLocalPlayer()) 
+local nextAutosave = 0
 
 --Settings
 local sizeX = 175
 local sizeY = 27
 
-local posX = 2
+local posX = 0
 local posY = 200
+
+local opacity = 255
+
+local secBeforeAutoSave = 15
 
 local Dragging = "f"
 local OldDragging = "f"
 local DraggingOffset = Vector.new(0, 0, 0)
 
 --Load up save
---FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater")
---local loadData = FileSys.GetTextFromFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\data.s")
---local ParsedData = Split(loadData, ",")
---posX = tonumber(ParsedData[1])
---posY = tonumber(ParsedData[2])
+FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater")
+local loadData = FileSys.GetTextFromFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\data.s")
+local ParsedData = Split(loadData, ",")
+posX = tonumber(ParsedData[1])
+posY = tonumber(ParsedData[2])
 
 --RGB
 local Type = { 0, 0, 0, 0 }
@@ -144,7 +161,10 @@ function Paint()
         end
 
         --Coderman optimize b4 release
-        FileSys.SaveTextToFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\data.s", posX .. "," .. posY)
+        if nextAutosave <= IGlobalVars.realtime then
+            FileSys.SaveTextToFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\data.s", posX .. "," .. posY)
+            nextAutosave = IGlobalVars.realtime + secBeforeAutoSave
+        end
     end
 end
 Hack.RegisterCallback("PaintTraverse", Paint)
