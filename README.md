@@ -19,8 +19,7 @@
 * Spectator List - Just a fancier version then the (non-beta (lol nn)) spectator list
 
 ## Private
-* WaterUI - Custom UI with custom Cross-Compatibility
-* Music Display - With custom Cross-Compatibility with WaterUI for displaying your current spotify song
+* BetaSpectatorList.lua - containing multiple designs made for friends etc
 
 ## Coming Soon
 
@@ -36,3 +35,5 @@
 * Health Glow - Changes player glow depending on player HP
 * Interium Plus - Add more customizability like toggles custom background fade when opening menu and more
 * Edgebug Detection - Detect Edgebugs with pinpoint accuracy and play a sound
+* WaterUI - Custom UI with custom Cross-Compatibility
+* Music Display - With custom Cross-Compatibility with WaterUI for displaying your current spotify song
