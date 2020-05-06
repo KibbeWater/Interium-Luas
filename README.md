@@ -27,9 +27,7 @@
 ## Coming Soon
 
 ### Planned **Private** Releases
-* Movement Helper - Show points around you where you can start your movement clip!
-* Rage - Interium's API is so good I can make resolver rage and desync :)
-* Custom Menu - Custom Interium menu to replicate NiceL's devbuild
+* None
 
 ### Planned **Public** Release
 * KibbeWater UI Library - An advanced UI Library for lua developers to more easily create and manage UI elements
