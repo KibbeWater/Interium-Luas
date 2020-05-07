@@ -3,10 +3,11 @@ Menu.Spacing()
 Menu.Separator()
 Menu.Spacing()
 Menu.Checkbox("Enable Speclist", "cEnableSpeclistPublic", true)
-Menu.Checkbox("Enable RGB", "cEnableSpeclistRGB", true)
-Menu.ColorPicker("Speclist Color", "cSpeclistColor", 255, 255, 255, 255)
-Menu.Combo( "", "cSpecDesign", { "Sown" }, 0)
-Menu.SliderInt("Size", "cPosSize", 1, 50, "", 27)
+Menu.Checkbox("Lock Position", "cSpeclistLockPublic", false)
+Menu.Checkbox("Enable RGB", "cEnableSpeclistRGBPublic", true)
+Menu.ColorPicker("Speclist Color", "cSpeclistColorPublic", 255, 255, 255, 255)
+Menu.Combo( "", "cSpecDesignPublic", { "Sown" }, 0)
+Menu.SliderInt("Size", "cPosSizePublic", 1, 50, "", 27)
 
 --idk is essential upp here
 function Split (inputstr, sep)
@@ -74,10 +75,10 @@ function Paint()
     end
 
     --Set Size 
-    sizeY = Menu.GetInt("cPosSize")
+    sizeY = Menu.GetInt("cPosSizePublic")
     sizeX = sizeY * 6.481481481481481
 
-    if Menu.GetInt("cSpecDesign") == 0 then --Sown
+    if Menu.GetInt("cSpecDesignPublic") == 0 then --Sown
 
         --RGB first cuz fucking priority rendering ZZZ (extra's rainbow gay pride rgb lua (too lazy to do calculations (I HATE DOING RGB)))
         local S = 3
@@ -85,7 +86,7 @@ function Paint()
         S,Type[1], R[1], G[1], B[1] = Rainbow(3,Type[1], R[1], G[1], B[1])
         S,Type[4], R[4], G[4], B[4] = Rainbow(3,Type[4], R[4], G[4], B[4])
              
-        if Menu.GetBool("cEnableSpeclistRGB") then
+        if Menu.GetBool("cEnableSpeclistRGBPublic") then
             Render.RectFilledMultiColor(
                 posX - 2,
                 posY - 2,
@@ -97,7 +98,7 @@ function Paint()
                 Color.new(R[4], G[4], B[4], 255)
             )
         else
-            Render.RectFilled(posX - 2, posY - 2, (posX + sizeX) + 2, (posY + sizeY) + 2, Menu.GetColor("cSpeclistColor"))
+            Render.RectFilled(posX - 2, posY - 2, (posX + sizeX) + 2, (posY + sizeY) + 2, Menu.GetColor("cSpeclistColorPublic"))
         end
 
         --Render Main Box
@@ -113,7 +114,7 @@ function Paint()
         --Check if box is able to be dragged
         if cursor.x >= posX and cursor.x <= posX + sizeX then
             if cursor.y >= posY and cursor.y <= posY + sizeY then
-                if InputSys.IsKeyDown(1) then
+                if InputSys.IsKeyDown(1) and not Menu.GetBool("cSpeclistLockPublic") then
                     Dragging = "t" --supposed to be a bool but I was way to fucking lazy to change it from my old string system (I did parsing be fucking proud atleast)
                 else
                     Dragging = "f"
@@ -135,7 +136,7 @@ function Paint()
         if #fakeNames ~= 0 then
             extensionSizeY = extensionSizeY + 2
         end
-        if Menu.GetBool("cEnableSpeclistRGB") then
+        if Menu.GetBool("cEnableSpeclistRGBPublic") then
             Render.RectFilledMultiColor(
                 posX + 1,
                 (posY + sizeY),
@@ -147,7 +148,7 @@ function Paint()
                 Color.new(R[4], G[4], B[4], 255)
             )
         else
-            Render.RectFilled(posX + 1, (posY + sizeY), (posX + sizeX) - 1, ((posY + sizeY) + extensionSizeY) + 4, Menu.GetColor("cSpeclistColor"))
+            Render.RectFilled(posX + 1, (posY + sizeY), (posX + sizeX) - 1, ((posY + sizeY) + extensionSizeY) + 4, Menu.GetColor("cSpeclistColorPublic"))
         end
         Render.RectFilledMultiColor(posX + 3, posY + sizeY, (posX + extensionSizeX) - 3, (((posY + sizeY) + 1) + extensionSizeY) + 1, Color.new(5,5,5,255), Color.new(5,5,5,255), Color.new(35,35,35,255), Color.new(35,35,35,255))
         --Render.RectFilled(posX + 3, (posY + sizeY), (posX + extensionSizeX) - 3, (((posY + sizeY) + 1) + extensionSizeY) + 1, Color.new(13,13,13,255), 0)
