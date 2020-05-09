@@ -228,6 +228,67 @@ function Paint()
         extensionSizeY = extensionSizeY + 8
         
         
+    elseif Menu.GetInt("cSpecDesignPublic") == 2 then --KibbeWater
+        
+        --Dragging System
+        local cursor = InputSys.GetCursorPos()
+
+        --Draw RGB
+        local S = 3
+
+        S,Type[1], R[1], G[1], B[1] = Rainbow(3,Type[1], R[1], G[1], B[1])
+        S,Type[4], R[4], G[4], B[4] = Rainbow(3,Type[4], R[4], G[4], B[4])
+
+        --Check if box is able to be dragged
+        if cursor.x >= posX and cursor.x <= posX + 200 then
+            if cursor.y >= posY and cursor.y <= posY + 22 then
+                if InputSys.IsKeyDown(1) and not Menu.GetBool("cSpeclistLockPublic") then
+                    Dragging = "t" --supposed to be a bool but I was way to fucking lazy to change it from my old string system (I did parsing be fucking proud atleast)
+                else
+                    Dragging = "f"
+                end
+            else
+                Dragging = "f"
+            end
+        else
+            Dragging = "f"
+        end
+
+        Render.RectFilled(posX, posY, posX + 200, posY + 16, Color.new(25,25,25,255), 0)
+        Render.RectFilledMultiColor(
+            posX + 5,
+            posY + 14,
+            (posX + 200) - 5,
+            posY + 16,
+            Color.new(R[4], G[4], B[4], 255),
+            Color.new(R[1], G[1], B[1], 255),
+            Color.new(R[1], G[1], B[1], 255),
+            Color.new(R[4], G[4], B[4], 255)
+        )
+
+        --Draw Extension
+        local extensionSizeY = 0
+
+        for i = 1, #fakeNames do
+            extensionSizeY = extensionSizeY + 6
+            local textSizeS = Render.CalcTextSize(fakeNames[i], 16, "sunflower")
+            extensionSizeY = extensionSizeY + textSizeS.y
+        end
+        extensionSizeY = extensionSizeY + 6
+
+        Render.RectFilled(posX, posY + 16, posX + 200, posY + 16 + extensionSizeY, Color.new(25,25,25,255), 0)
+
+        --Draw Extension
+        extensionSizeY = 0
+
+        for i = 1, #fakeNames do
+            extensionSizeY = extensionSizeY + 6
+            local textSizeS = Render.CalcTextSize(fakeNames[i], 16, "sunflower")
+            Render.Text(fakeNames[i], posX + 6, posY + extensionSizeY + 16, 16, Color.new(255,255,255,255), false, false, "sunflower")
+            extensionSizeY = extensionSizeY + textSizeS.y
+        end
+        extensionSizeY = extensionSizeY + 6
+
     end
 end
 Hack.RegisterCallback("PaintTraverse", Paint)
