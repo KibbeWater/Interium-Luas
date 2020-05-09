@@ -6,8 +6,11 @@ Menu.Checkbox("Enable Speclist", "cEnableSpeclistPublic", true)
 Menu.Checkbox("Lock Position", "cSpeclistLockPublic", false)
 Menu.Checkbox("Enable RGB", "cEnableSpeclistRGBPublic", true)
 Menu.ColorPicker("Speclist Color", "cSpeclistColorPublic", 255, 255, 255, 255)
-Menu.Combo( "", "cSpecDesignPublic", { "Sown" }, 0)
+Menu.Combo( "", "cSpecDesignPublic", { "Sown", "Aimware" }, 0)
 Menu.SliderInt("Size", "cPosSizePublic", 1, 50, "", 27)
+Menu.Separator()
+Menu.Text("INCASE SPECTATOR LIST DOESN'T APPEAR")
+Menu.Checkbox("Reset Position", "cSpeclistReset", false)
 
 --idk is essential upp here
 function Split (inputstr, sep)
@@ -67,11 +70,17 @@ local B = { 0, 0, 255, 0 }
 
 --Draw Spectator List
 function Paint()
-    if not Utils.IsInGame() or not Menu.GetBool("cEnableSpeclistPublic") then return end
+    if not Menu.GetBool("cEnableSpeclistPublic") then return end
     if Utils.IsLocalAlive() then
         BuildSpecList(IEngine.GetLocalPlayer())
     else
         BuildSpecList(FindTarget())
+    end
+
+    if Menu.GetBool("cSpeclistReset") then
+        posX = 100
+        posY = 100
+        Menu.SetBool("cSpeclistReset", false)
     end
 
     --Set Size 
@@ -166,6 +175,59 @@ function Paint()
             FileSys.SaveTextToFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\data.s", posX .. "," .. posY)
             nextAutosave = IGlobalVars.realtime + secBeforeAutoSave
         end
+    elseif Menu.GetInt("cSpecDesignPublic") == 1 then --Aimware
+
+        --Dragging System
+        local cursor = InputSys.GetCursorPos()
+
+        --Check if box is able to be dragged
+        if cursor.x >= posX and cursor.x <= posX + 200 then
+            if cursor.y >= posY and cursor.y <= posY + 24 then
+                if InputSys.IsKeyDown(1) and not Menu.GetBool("cSpeclistLock") then
+                    Dragging = "t" --supposed to be a bool but I was way to fucking lazy to change it from my old string system (I did parsing be fucking proud atleast)
+                else
+                    Dragging = "f"
+                end
+            else
+                Dragging = "f"
+            end
+        else
+            Dragging = "f"
+        end
+
+        --Render Header
+        Render.RectFilled(posX, posY, posX + 200, posY + 24, Color.new(200,40,40,255), 3)
+        Render.RectFilled(posX, posY + 23, posX + 200, posY + 24, Color.new(200,40,40,255), 0)
+
+        --Render Header Text
+        local dotTextSize = Render.CalcTextSize_1("Spectators list", 15, "sunflower").y / 2
+        Render.Text_1("Spectators list", posX + 8, posY + (12 - dotTextSize), 15, Color.new(255,255,255,255), false, false, "sunflower")
+
+        --Draw Extension
+        local extensionSizeY = 0
+
+        for i = 1, #fakeNames do
+            extensionSizeY = extensionSizeY + 8
+            local textSizeS = Render.CalcTextSize_1(fakeNames[i], 14, "sunflower")
+            extensionSizeY = extensionSizeY + textSizeS.y
+        end
+        extensionSizeY = extensionSizeY + 8
+
+        Render.RectFilled(posX, posY + 24, posX + 200, posY + extensionSizeY + 24, Color.new(0,0,0,75), 0)
+        Render.RectFilled(posX, posY + extensionSizeY + 24, posX + 200, posY + extensionSizeY + 28, Color.new(200,40,40,255), 0)
+       
+        --Draw Extension
+        local extensionSizeY = 0
+
+        for i = 1, #fakeNames do
+            extensionSizeY = extensionSizeY + 8
+            local textSizeS = Render.CalcTextSize(fakeNames[i], 14, "sunflower")
+            Render.Text(fakeNames[i], posX + 6, posY + extensionSizeY + 24, 14, Color.new(255,255,255,255), false, false, "sunflower")
+            extensionSizeY = extensionSizeY + textSizeS.y
+        end
+        extensionSizeY = extensionSizeY + 8
+        
+        
     end
 end
 Hack.RegisterCallback("PaintTraverse", Paint)
