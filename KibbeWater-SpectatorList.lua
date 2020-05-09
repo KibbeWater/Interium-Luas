@@ -183,7 +183,7 @@ function Paint()
         --Check if box is able to be dragged
         if cursor.x >= posX and cursor.x <= posX + 200 then
             if cursor.y >= posY and cursor.y <= posY + 24 then
-                if InputSys.IsKeyDown(1) and not Menu.GetBool("cSpeclistLock") then
+                if InputSys.IsKeyDown(1) and not Menu.GetBool("cSpeclistLockPublic") then
                     Dragging = "t" --supposed to be a bool but I was way to fucking lazy to change it from my old string system (I did parsing be fucking proud atleast)
                 else
                     Dragging = "f"
