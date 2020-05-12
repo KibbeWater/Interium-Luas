@@ -24,9 +24,16 @@ Hack.RegisterCallback("PaintTraverse", function ()
     if not Menu.GetBool("cEnableHelper") or not Utils.IsInGame() or not Utils.IsLocalAlive() then return end
 
     local localPos = pLocal:GetAbsOrigin()
+    local weapon = pLocal:GetActiveWeapon()
+    local wInfo = weapon:GetWeaponData()
+    local wName = ""
+    
+    if wInfo.consoleName == "weapon_molotov" then wName = "molotov" end
+    if wInfo.consoleName == "weapon_smokegrenade" then wName = "smoke" end
+    if wInfo.consoleName ~= "weapon_smokegrenade" and wInfo.consoleName == "weapon_molotov" then wName = "" end
 
     for i = 1, #coords do
-        if #coords[i] == 8 then
+        if #coords[i] == 8 and coords[i][3] == wName then
             if displayedID == 0 or i == displayedID then
                 local string = coords[i][1] .. "\n" .. coords[i][2]
                 local textPos = Vector.new(coords[i][4], coords[i][5], coords[i][6] + 50)
