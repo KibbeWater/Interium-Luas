@@ -27,10 +27,10 @@ Hack.RegisterCallback("PaintTraverse", function ()
     local weapon = pLocal:GetActiveWeapon()
     local wInfo = weapon:GetWeaponData()
     local wName = ""
-    
+
     if wInfo.consoleName == "weapon_molotov" then wName = "molotov" end
     if wInfo.consoleName == "weapon_smokegrenade" then wName = "smoke" end
-    if wInfo.consoleName ~= "weapon_smokegrenade" and wInfo.consoleName == "weapon_molotov" then wName = "" end
+    if wInfo.consoleName ~= "weapon_smokegrenade" and wInfo.consoleName ~= "weapon_molotov" then wName = "" end
 
     for i = 1, #coords do
         if #coords[i] == 8 and coords[i][3] == wName then
@@ -45,10 +45,12 @@ Hack.RegisterCallback("PaintTraverse", function ()
                 local dist = Math.VectorDistance(pos, localPos)
                 local nadeDist = 600
                 local view = pLocal:GetPropVector(oVecView)
+                local screen = Vector.new()
 
                 Math.AngleVectors(ang, angVec)
 
                 local throwPos = Vector.new(pos.x + (angVec.x * nadeDist), pos.y + (angVec.y * nadeDist), pos.z + (angVec.z * nadeDist) + 64)
+                local throwPosText = Vector.new(pos.x + (angVec.x * nadeDist), pos.y + (angVec.y * nadeDist), pos.z + (angVec.z * nadeDist) + 54)
                 local screenThrow = Vector.new(0,0,0)
 
                 if Math.WorldToScreen(textPos, toScreen) and dist <= Menu.GetInt("cHelperRenderDistance") and dist >= 50 then
@@ -66,6 +68,7 @@ Hack.RegisterCallback("PaintTraverse", function ()
                     Render.Circle(sCircle.x, sCircle.y, radius, color, 25, 2)
                 end
                 if Math.WorldToScreen(throwPos, screenThrow) and dist <= 3 then
+                    if Math.WorldToScreen(throwPosText, screen) then Render.Text_1(string, screen.x, screen.y, 15, Color.new(255, 255, 255, 255), false, true) end
                     local color = Color.new(255,0,0,255)
                     displayedID = i
                     Render.Circle(screenThrow.x, screenThrow.y, 4, color, 25, 2)
@@ -78,6 +81,13 @@ Hack.RegisterCallback("PaintTraverse", function ()
 end)
 
 Hack.RegisterCallback("CreateMove", function (cmd, send)
+    if not Utils.IsInGame() then 
+        coords = {}
+        displayedID = 0
+        loadedMap = {}
+    end
+    if not Menu.GetBool("cEnableHelper") or not Utils.IsInGame() then return end
+
     map = IEngine.GetLevelNameShort()
     
     --Load Coords
