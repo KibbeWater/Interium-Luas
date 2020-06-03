@@ -6,7 +6,7 @@ Menu.Checkbox("Enable Speclist", "cEnableSpeclistPublic", true)
 Menu.Checkbox("Lock Position", "cSpeclistLockPublic", false)
 Menu.Checkbox("Enable RGB", "cEnableSpeclistRGBPublic", true)
 Menu.ColorPicker("Speclist Color", "cSpeclistColorPublic", 255, 255, 255, 255)
-Menu.Combo( "", "cSpecDesignPublic", { "Sown", "Aimware" }, 0)
+Menu.Combo( "", "cSpecDesignPublic", { "Sown", "Aimware", "KibbeWater", "Beta", "Aiyu", "Sown v2" }, 0)
 Menu.SliderInt("Size", "cPosSizePublic", 1, 50, "", 27)
 Menu.Separator()
 Menu.Text("INCASE SPECTATOR LIST DOESN'T APPEAR")
@@ -129,10 +129,10 @@ function Paint()
                     Dragging = "f"
                 end
             else
-                Dragging = "f"
+                if InputSys.IsKeyDown(0) or OldDragging == "f" then Dragging = "f" end
             end
         else
-            Dragging = "f"
+            if InputSys.IsKeyDown(0) or OldDragging == "f" then Dragging = "f" end
         end
 
         --Render name's BG
@@ -169,12 +169,6 @@ function Paint()
             Render.Text(fakeNames[i], posX + 6, ((posY + sizeY)) + extensionSizeY, sizeY * 0.6296296296296296, Color.new(255,255,255,255), false, true, "sunflowerrr")
             extensionSizeY = extensionSizeY + Render.CalcTextSize(fakeNames[i], sizeY * 0.6296296296296296, "sunflowerrr").y
         end
-
-        --Coderman optimize b4 release
-        if nextAutosave <= IGlobalVars.realtime then
-            FileSys.SaveTextToFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\data.s", posX .. "," .. posY)
-            nextAutosave = IGlobalVars.realtime + secBeforeAutoSave
-        end
     elseif Menu.GetInt("cSpecDesignPublic") == 1 then --Aimware
 
         --Dragging System
@@ -189,10 +183,10 @@ function Paint()
                     Dragging = "f"
                 end
             else
-                Dragging = "f"
+                if InputSys.IsKeyDown(0) or OldDragging == "f" then Dragging = "f" end
             end
         else
-            Dragging = "f"
+            if InputSys.IsKeyDown(0) or OldDragging == "f" then Dragging = "f" end
         end
 
         --Render Header
@@ -248,10 +242,10 @@ function Paint()
                     Dragging = "f"
                 end
             else
-                Dragging = "f"
+                if InputSys.IsKeyDown(0) or OldDragging == "f" then Dragging = "f" end
             end
         else
-            Dragging = "f"
+            if InputSys.IsKeyDown(0) or OldDragging == "f" then Dragging = "f" end
         end
 
         Render.RectFilled(posX, posY, posX + 200, posY + 16, Color.new(25,25,25,255), 0)
@@ -289,12 +283,190 @@ function Paint()
         end
         extensionSizeY = extensionSizeY + 6
 
+    elseif Menu.GetInt("cSpecDesignPublic") == 3 then --Beta Custom
+        local textYSize = Render.CalcTextSize("Spectator List", 18, "sunflower").y / 5
+        Render.RectFilled(posX, posY, posX + sizeX, posY + sizeY, Color.new(0,0,0,opacity), 4)
+        Render.Text_1("Spectator List", posX + sizeX / 2, posY + textYSize, 18, Color.new(255,255,255,opacity), true, true)
+
+        --Dragging System
+        local cursor = InputSys.GetCursorPos()
+
+        --Check if box is able to be dragged
+        if cursor.x >= posX and cursor.x <= posX + sizeX then
+            if cursor.y >= posY and cursor.y <= posY + sizeY then
+                if InputSys.IsKeyDown(1) and not Menu.GetBool("cSpeclistLock") then
+                    Dragging = "t"
+                else
+                    Dragging = "f"
+                end
+            else
+                if InputSys.IsKeyDown(0) or OldDragging == "f" then Dragging = "f" end
+            end
+        else
+            if InputSys.IsKeyDown(0) or OldDragging == "f" then Dragging = "f" end
+        end
+
+        --Draw Extension
+        local extensionSizeX = sizeX
+        local extensionSizeY = 0
+        for i = 1, #fakeNames do
+            extensionSizeY = extensionSizeY + 2
+            extensionSizeY = extensionSizeY + Render.CalcTextSize(fakeNames[i], 15, "sunflower").y
+        end
+        if #fakeNames ~= 0 then
+            extensionSizeY = extensionSizeY + 2
+        end
+        Render.RectFilled(posX + 3, (posY + sizeY), (posX + extensionSizeX) - 3, (((posY + sizeY) + 1) + extensionSizeY) + 1, Color.new(10,10,10,opacity), 5)
+        Render.RectFilled(posX + 3, (((posY + sizeY) + 1) + extensionSizeY) - 4, (posX + extensionSizeX) - 3, (((posY + sizeY) + 1) + extensionSizeY) + 8, Color.new(10,10,10,opacity), 5)
+
+        --Draw RGB
+        local S = 3
+
+        S,Type[1], R[1], G[1], B[1] = Rainbow(3,Type[1], R[1], G[1], B[1])
+	    S,Type[4], R[4], G[4], B[4] = Rainbow(3,Type[4], R[4], G[4], B[4])
+
+	    Render.RectFilledMultiColor(
+		    posX,                                 -- x1
+		    (posY + sizeY) - 2,                                 -- y1
+		    posX + sizeX,                           -- x2
+		    (posY + sizeY) + 1,              -- y2
+		    Color.new(R[4], G[4], B[4], opacity),  --  upper left
+		    Color.new(R[1], G[1], B[1], opacity),  --  upper right
+		    Color.new(R[1], G[1], B[1], opacity),  -- bottom right
+		    Color.new(R[4], G[4], B[4], opacity)   -- bottom left
+        )
+
+        extensionSizeY = 0
+        for i = 1, #fakeNames do
+            extensionSizeY = extensionSizeY + 2
+            Render.Text_1(fakeNames[i], posX + sizeX / 2, ((posY + sizeY) + 1) + extensionSizeY, 17, Color.new(255,255,255,opacity), true, true, "sunflowerr")
+            extensionSizeY = extensionSizeY + Render.CalcTextSize(fakeNames[i], 15, "sunflowerr").y
+        end
+
+        FileSys.SaveTextToFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\data.s", posX .. "," .. posY)
+    elseif Menu.GetInt("cSpecDesignPublic") == 4 then --Aiyu
+        --Draw Extension
+        local extensionSizeY = 0
+
+        for i = 1, #fakeNames do
+            extensionSizeY = extensionSizeY + 2
+            local textSizeS = Render.CalcTextSize(fakeNames[i], 17, "sunflower")
+            Render.Text(fakeNames[i], Globals.ScreenWidth() - (textSizeS.x + 5), extensionSizeY, 17, Color.new(255,255,255,opacity), false, true, "sunflower")
+            extensionSizeY = extensionSizeY + Render.CalcTextSize(fakeNames[i], 17, "sunflower").y
+        end
+    elseif Menu.GetInt("cSpecDesignPublic") == 5 then --Sown v2
+        --Dragging System
+        local cursor = InputSys.GetCursorPos()
+
+        if #fakeNames == 0 then
+            --Check if box is able to be dragged
+            if cursor.x >= posX and cursor.x <= posX + sizeX then
+                if cursor.y >= posY and cursor.y <= posY + sizeY then
+                    if InputSys.IsKeyDown(1) and not Menu.GetBool("cSpeclistLock") then
+                        Dragging = "t" --supposed to be a bool but I was way to fucking lazy to change it from my old string system (I did parsing be fucking proud atleast)
+                    else
+                        Dragging = "f"
+                    end
+                else
+                    if InputSys.IsKeyDown(0) or OldDragging == "f" then Dragging = "f" end
+                end
+            else
+                if InputSys.IsKeyDown(0) or OldDragging == "f" then Dragging = "f" end
+            end
+            --Draw RGB
+            local S = 3
+
+            S,Type[1], R[1], G[1], B[1] = Rainbow(3,Type[1], R[1], G[1], B[1])
+            S,Type[4], R[4], G[4], B[4] = Rainbow(3,Type[4], R[4], G[4], B[4])
+        
+            if Menu.GetBool("cSownSpecEnableRGB") then
+                Render.RectFilledMultiColor(
+                    posX - 2,                                 -- x1
+                    posY - 2,                                 -- y1
+                    (posX + sizeX) + 2,                           -- x2
+                    (posY + sizeY) + 2,              -- y2
+                    Color.new(R[4], G[4], B[4], opacity),  --  upper left
+                    Color.new(R[1], G[1], B[1], opacity),  --  upper right
+                    Color.new(R[1], G[1], B[1], opacity),  -- bottom right
+                    Color.new(R[4], G[4], B[4], opacity)   -- bottom left
+                )
+            else
+                Render.RectFilled(posX - 2, posY - 2, (posX + sizeX) + 2, (posY + sizeY) + 2, Color.new(0,0,0,opacity), 0)
+            end
+
+            if not Menu.GetBool("cSownSpecLightMode") then Render.RectFilled(posX, posY,sizeX + posX, posY + sizeY, Color.new(0,0,0,opacity), 0) else Render.RectFilled(posX, posY,sizeX + posX, posY + sizeY, Color.new(255,255,255,opacity), 0) end
+            local dotTextSize = Render.CalcTextSize(Menu.GetString("cSownSpecEmptyText"), 17, "sunflower").y / 2
+            if not Menu.GetBool("cSownSpecLightMode") then Render.Text(Menu.GetString("cSownSpecEmptyText"), posX + (sizeX / 2), posY + ((sizeY / 2) - dotTextSize), 17, Color.new(255,255,255,opacity), true, true, "sunflower") else Render.Text(Menu.GetString("cSownSpecEmptyText"), posX + (sizeX / 2), posY + ((sizeY / 2) - dotTextSize), 17, Color.new(0,0,0,opacity), true, true, "sunflower") end
+        end
+
+        --Draw Extension
+        local extensionSizeY = 0
+
+        for i = 1, #fakeNames do
+            extensionSizeY = extensionSizeY + 2
+            local textSizeS = Render.CalcTextSize(fakeNames[i], 15, "sunflower")
+            extensionSizeY = extensionSizeY + Render.CalcTextSize(fakeNames[i], 15, "sunflower").y
+        end
+        extensionSizeY = extensionSizeY + 4
+
+        if #fakeNames ~= 0 then
+            --Check if box is able to be dragged
+            if cursor.x >= posX and cursor.x <= posX + sizeX then
+                if cursor.y >= posY and cursor.y <= posY + extensionSizeY then
+                    if InputSys.IsKeyDown(1) and not Menu.GetBool("cSpeclistLock") then
+                        Dragging = "t" --supposed to be a bool but I was way to fucking lazy to change it from my old string system (I did parsing be fucking proud atleast)
+                    else
+                        Dragging = "f"
+                    end
+                else
+                    Dragging = "f"
+                end
+            else
+                Dragging = "f"
+            end
+            --Draw RGB
+            local S = 3
+
+            S,Type[1], R[1], G[1], B[1] = Rainbow(3,Type[1], R[1], G[1], B[1])
+            S,Type[4], R[4], G[4], B[4] = Rainbow(3,Type[4], R[4], G[4], B[4])
+        
+            if Menu.GetBool("cSownSpecEnableRGB") then
+                Render.RectFilledMultiColor(
+                    posX - 2,                                 -- x1
+                    posY - 2,                                 -- y1
+                    (posX + sizeX) + 2,                           -- x2
+                    (posY + extensionSizeY) + 2,              -- y2
+                    Color.new(R[4], G[4], B[4], 255),  --  upper left
+                    Color.new(R[1], G[1], B[1], 255),  --  upper right
+                    Color.new(R[1], G[1], B[1], 255),  -- bottom right
+                    Color.new(R[4], G[4], B[4], 255)   -- bottom left
+                )
+            else
+                Render.RectFilled(posX - 2, posY - 2, (posX + sizeX) + 2, (posY + extensionSizeY) + 2, Menu.GetColor("cSownSpecColor"), 0)
+            end
+
+            if not Menu.GetBool("cSownSpecLightMode") then Render.RectFilled(posX, posY,sizeX + posX, posY + extensionSizeY, Color.new(0,0,0,opacity), 0) else Render.RectFilled(posX, posY,sizeX + posX, posY + extensionSizeY, Color.new(255,255,255,opacity), 0) end
+        end
+
+        extensionSizeY = 0
+
+        for i = 1, #fakeNames do
+            extensionSizeY = extensionSizeY + 2
+            if not Menu.GetBool("cSownSpecLightMode") then Render.Text(fakeNames[i], posX + 6, posY + extensionSizeY, 17, Color.new(255,255,255,255), false, true, "sunflower") else Render.Text(fakeNames[i], posX + 6, posY + extensionSizeY, 17, Color.new(0,0,0,255), false, true, "sunflower") end
+            extensionSizeY = extensionSizeY + Render.CalcTextSize(fakeNames[i], 15, "sunflower").y
+        end
+    end
+
+    --Coderman optimize b4 release
+    if nextAutosave <= IGlobalVars.realtime then
+        FileSys.SaveTextToFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\data.s", posX .. "," .. posY)
+        nextAutosave = IGlobalVars.realtime + secBeforeAutoSave
     end
 end
 Hack.RegisterCallback("PaintTraverse", Paint)
 
 function FrameStageNotify(stage)
-    if stage ~= 5 then return end
+    if stage == 5 then return end
 
     if Dragging ~= "f" then
         local cursor = InputSys.GetCursorPos()
