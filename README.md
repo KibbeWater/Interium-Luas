@@ -5,7 +5,7 @@
 - [X] Become "Lua God"
 - [X] Publish First Public Lua
 - [X] Finish 5 Luas
-- [ ] Finish 10 Luas
+- [X] Finish 10 Luas
 
 ## Ideas?
 - If you have an idea please submit them to me on Discord. **@키베물#1234**
@@ -21,6 +21,7 @@
 * WaterUI - Custom UI with custom Cross-Compatibility
 * Music Display - With custom Cross-Compatibility with WaterUI for displaying your current spotify song
 * Teamdamage List - Shows a list of how much damage you and your teammates has done, usefull for griefing
+* Grenade Helper - Show points in-game where you can stand and aim to throw a nade to a spesific spot
 
 ## Private
 * BetaSpectatorList.lua - containing multiple designs made for friends etc
@@ -32,7 +33,5 @@
 
 ### Planned **Public** Release
 * KibbeWater UI Library - An advanced UI Library for lua developers to more easily create and manage UI elements
-* Smoke / Nade Helper - Show points around you where you can throw nades / smokes
-* Buy Logger - Print in chat what you enemies are buying!
 * Health Glow - Changes player glow depending on player HP
 * Interium Plus - Add more customizability like toggles custom background fade when opening menu and more
