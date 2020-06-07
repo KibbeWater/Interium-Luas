@@ -20,6 +20,7 @@
 * Edgebug Detection - Detect Edgebugs with pinpoint accuracy and play a sound
 * WaterUI - Custom UI with custom Cross-Compatibility
 * Music Display - With custom Cross-Compatibility with WaterUI for displaying your current spotify song
+* Teamdamage List - Shows a list of how much damage you and your teammates has done, usefull for griefing
 
 ## Private
 * BetaSpectatorList.lua - containing multiple designs made for friends etc
