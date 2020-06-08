@@ -4,6 +4,8 @@ Menu.Separator()
 Menu.Spacing()
 Menu.Checkbox("Enable Debug", "cDebug", false)
 Menu.Checkbox("Enable EB Rainbow", "bRainbowGay", false)
+Menu.Checkbox("Enable Steelseries Gamesense", "cEnableGSSDK", false)
+Menu.Checkbox("Optimize Steelseries Gamesense", "cOptimizeGSSDK", false)
 Menu.Text("To change EB Hitsound change file in")
 Menu.Text("\\CSGO\\FilesForLUA\\kibbewater\\ebhit.wav")
 
@@ -21,22 +23,17 @@ local ON_GROUND = 0
 --Variables for data tracking
 local oldhVel = 0
 local oldvVel = 0
-local olddiff = 0
-local oldground = true
-local oldgrounddebug = true
-local x2 = 0
-local y2 = 0
 local lastedgebug = ""
 local edgebugDetectionStage
 local ebsucession = 0
 local ebsucessionsession = 0
 local cooldown = 0
+local skipNext = false
 
 --for rainbow pride gay type beat
 local opacity = 0
 local viewRainbow = 0
 local Height = 0
-local oldTime = 0
 local Type = { 0, 0, 0, 0 }
 local R = { 255, 0, 0, 0 }
 local G = { 0, 255, 0, 0 }
@@ -45,6 +42,11 @@ local iImageAlpha = 0
 local minusAlpha = 1
 local MaxTicks = 32
 local Ticks = 0
+local firstRealTime = 0
+local tickCount = 0
+local first = true
+local first2 = false
+local validateEB = true
 
 local function VecLenght2D(vec)
     return math.sqrt(vec.x * vec.x + vec.y * vec.y)
@@ -151,9 +153,9 @@ function PaintTraverse()
 
     if(Menu.GetBool("cDebug")) then
         if(IsBit(Flags, ON_GROUND)) then
-            Render.Text_1("On Ground", 300, 100, 20, Color.new(255, 255, 255, 255), true, true)
+            Render.Text_1("On Ground", 10, 500, 20, Color.new(255, 255, 255, 255), false, true)
         else
-            Render.Text_1("Zuhn Bhop", 300, 100, 20, Color.new(255, 255, 255, 255), true, true)
+            Render.Text_1("Zuhn Bhop", 10, 500, 20, Color.new(255, 255, 255, 255), false, true)
         end
 
         local oldx = vVelocity.x
@@ -171,19 +173,32 @@ function PaintTraverse()
 
         local hVel = x + y;
     
-
-        Render.Text_1("Vertical Velocity " .. vVelocity.z, 300, 120, 20, Color.new(255, 255, 255, 255), true, true)
-        Render.Text_1("Horizontal Velocity " .. x .. "x " .. y .. "y", 300, 140, 20, Color.new(255, 255, 255, 255), true, true)
-        Render.Text_1("Last Edgebug Info " .. lastedgebug, 300, 160, 20, Color.new(255, 255, 255, 255), true, true)
-        Render.Text_1("Edgebug Detection Stage " .. edgebugDetectionStage .. " (3 = edgebug)", 300, 180, 20, Color.new(255, 255, 255, 255), true, true)
-        Render.Text_1("Old Data horizontal vel: " .. oldhVel, 300, 200, 20, Color.new(255, 255, 255, 255), flase, true)
-        Render.Text_1("Curtime: " .. IGlobalVars.curtime, 300, 220, 20, Color.new(255, 255, 255, 255), true, true)
-        Render.Text_1("Rainbow View: " .. viewRainbow, 300, 240, 20, Color.new(255, 255, 255, 255), true, true)
+        local vVelDebug = math.floor(vVelocity.z)
+        Render.Text_1("Vertical Velocity " .. vVelDebug, 10, 520, 20, Color.new(255, 255, 255, 255), false, true)
+        Render.Text_1("Horizontal Velocity " .. math.floor(oldhVel), 10, 540, 20, Color.new(255, 255, 255, 255), false, true)
+        Render.Text_1("Last Edgebug Info " .. lastedgebug, 10, 560, 20, Color.new(255, 255, 255, 255), false, true)
+        Render.Text_1("Edgebug Detection Stage " .. edgebugDetectionStage, 10, 580, 20, Color.new(255, 255, 255, 255), false, true)
+        Render.Text_1("Horizontal Velocity: " .. math.floor(oldhVel), 10, 600, 20, Color.new(255, 255, 255, 255), false, true)
+        Render.Text_1("Realtime: " .. IGlobalVars.realtime, 10, 620, 20, Color.new(255, 255, 255, 255), false, true)
+        Render.Text_1("Valid EB: " .. tostring(validateEB), 10, 640, 20, Color.new(255, 255, 255, 255), false, true)
     end
 end
 Hack.RegisterCallback("PaintTraverse", PaintTraverse)  
 
 function CreateMove() 
+    if first then
+        firstRealTime = IGlobalVars.realtime
+        first2 = true
+        first = false
+    end
+
+    if firstRealTime + 1 <= IGlobalVars.realtime then
+        first2 = false
+        tickrate = tickCount - 4
+    end
+
+    if first2 then tickCount = tickCount + 1 end
+
     local pLocal = IEntityList.GetPlayer(IEngine.GetLocalPlayer()) 
 
     local fVelocity = math.floor(VecLenght2D(pLocal:GetPropVector(vVelocity_Offset)) + 0.5)
@@ -200,35 +215,55 @@ function CreateMove()
 
     local horizontal = pX + pY
 
+    if pLocal:GetMoveType() == 9 then validateEB = false end
+    if IsBit(Flags, ON_GROUND) == true then validateEB = true end
+
     --Detect EB
-    if(IsBit(Flags, ON_GROUND) == false and Utils.IsLocalAlive() and pLocal:GetMoveType() ~= 8 and pLocal:GetMoveType() ~= 9) then
+    if(IsBit(Flags, ON_GROUND) == false and Utils.IsLocalAlive() and pLocal:GetMoveType() ~= 8 and pLocal:GetMoveType() ~= 9 and validateEB) then
         edgebugDetectionStage = 1
-        if(vVelocity.z < 1 and oldvVel+0.5 < vVelocity.z) then
+        if(vVelocity.z < 1 and oldvVel < vVelocity.z) then
             edgebugDetectionStage = 2
-            if(vVelocity.x ~= 0 or vVelocity.y ~= 0 and oldhVel == horizontal) then
+            if(horizontal > 10) then
                 edgebugDetectionStage = 3
-                if Menu.GetBool("cDebug") then Print("Detection S3 (" .. IGlobalVars.curtime .. " > " .. cooldown .. ")") end
-                if IGlobalVars.curtime > cooldown then
-                    if Menu.GetBool("cDebug") then Print("Detection S4 (Edgebug)\necho Info: " .. vVelocity.x .. " " .. vVelocity.y .. " " .. vVelocity.z) end
-                    edgebugDetectionStage = 4
-                    cooldown = IGlobalVars.curtime + 0.5
-                    --EDGEBUG GO CLYP
-                    PlaySound(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\ebhit.wav")
-                    ebsucession = ebsucession + 1
-                    ebsucessionsession = ebsucessionsession + 1
-                    iImageAlpha = 30
-                    Ticks = MaxTicks
-                    if(IsBit(Flags, ON_GROUND)) then
-                        lastedgebug = vVelocity.x .. "x " .. vVelocity.y .. "y " .. vVelocity.z .. "z OnGround: true"
-                    else
-                        lastedgebug = vVelocity.x .. "x " .. vVelocity.y .. "y " .. vVelocity.z .. "z OnGround: false"
+                if vVelocity.x ~= 0 or vVelocity.y ~= 0 then
+                    if IGlobalVars.realtime > cooldown then
+                        --Debug Data
+                        if Menu.GetBool("cDebug") then Print("Detection S4 (Edgebug)\necho Info: " .. vVelocity.x .. " " .. vVelocity.y .. " " .. vVelocity.z) end
+                        edgebugDetectionStage = 4
+
+                        --Set Cooldown
+                        cooldown = IGlobalVars.realtime + 0.5
+
+                        --Trigger Optimized request to backend
+                        if Menu.GetBool("cEnableGSSDK") and Menu.GetBool("cOptimizeGSSDK") then URLDownloadToFile("http://127.0.0.1:420/Edgebug?game=INTERIUM&event=EDGEBUG&value=40", GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\dummy.txt") end
+                        
+                        --Do Edgebug Stuff
+                        PlaySound(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\ebhit.wav")
+
+                        --Cross compatibility stat variables
+                        ebsucession = ebsucession + 1
+                        ebsucessionsession = ebsucessionsession + 1
+
+                        --Rainbow Stuff
+                        iImageAlpha = 40
+                        Ticks = MaxTicks
+
+                        --Draw Last Edgebug Data
+                        if(IsBit(Flags, ON_GROUND)) then
+                            lastedgebug = math.floor(vVelocity.x) .. "x " .. math.floor(vVelocity.y) .. "y " .. vVelocity.z .. "z OnGround: true"
+                        else
+                            lastedgebug = math.floor(vVelocity.x) .. "x " .. math.floor(vVelocity.y) .. "y " .. vVelocity.z .. "z OnGround: false"
+                        end
                     end
                 end
             end
         end
     end
 
-    if (Ticks == 0 and iImageAlpha > 0) then iImageAlpha = iImageAlpha - minusAlpha end
+    if (Ticks == 0 and iImageAlpha > 0) then 
+        iImageAlpha = iImageAlpha - minusAlpha 
+        if Menu.GetBool("cEnableGSSDK") and not Menu.GetBool("cOptimizeGSSDK") then URLDownloadToFile("http://127.0.0.1:420/Update?game=INTERIUM&event=EDGEBUG&value=" .. iImageAlpha, GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\dummy.txt") end
+    end
     if (Ticks > 0) then Ticks = Ticks - 1 end
 
     if (not Utils.IsInGame()) then
@@ -236,6 +271,11 @@ function CreateMove()
         cooldown = 0
         viewRainbow = 0
     end
+
+    if iImageAlpha > 0 and not skipNext then 
+        
+    end
+    if skipNext then skipNext = false end
 
     --Finish and register old Data
     oldhVel = horizontal
@@ -262,6 +302,6 @@ function Func(Event)
     if (Event:GetName() == "round_start") then 
 		Ticks = 0
 		iImageAlpha = 0
-	end
+    end
 end
 Hack.RegisterCallback("FireEventClientSideThink", Func)
