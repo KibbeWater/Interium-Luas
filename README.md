@@ -8,7 +8,7 @@
 - [X] Finish 10 Luas
 
 ## Ideas?
-- If you have an idea please submit them to me on Discord. **@키베물#1234**
+- If you have an idea please submit them to me on Discord. **@snow#2030**
 - If I decide to make it I'll add it to my github and you will recieve an encrypted copy
 
 ## What is Interium?
@@ -20,7 +20,7 @@
 * Edgebug Detection - Detect Edgebugs with pinpoint accuracy and play a sound
 * WaterUI - Custom UI with custom Cross-Compatibility
 * Music Display - With custom Cross-Compatibility with WaterUI for displaying your current spotify song
-* Teamdamage List - Shows a list of how much damage you and your teammates has done, usefull for griefing
+* Teamdamage List (TeamDamageESP) - Shows a list of how much damage you and your teammates has done, usefull for griefing
 * Grenade Helper - Show points in-game where you can stand and aim to throw a nade to a spesific spot
 
 ## Private
