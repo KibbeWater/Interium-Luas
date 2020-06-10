@@ -2,8 +2,7 @@
 Menu.Spacing()
 Menu.Separator()
 Menu.Spacing()
-Menu.Checkbox("Enable Teamdamage ESP", "cEnableTDamageESP", true)  
-Menu.Checkbox("Disable Main ESP check", "cDisableTDamageESPCheck", true)  
+Menu.Checkbox("Enable Teamdamage ESP", "cEnableTDamageESP", true)   
 Menu.Checkbox("Enemy Only", "cTDamageEnemy", true)  
 Menu.Checkbox("Enable Draw Distance", "cEnableTDamageDDistance", true)     
 Menu.SliderInt("Draw Distance", "cTDamageDraw", 500, 2000, "", 1250) 
@@ -22,6 +21,7 @@ local damage = {}
 
 --Setup lua
 function Setup()
+    Menu.SetBool("cEnableTDamageSizing", false)
     for i = 1, 64 do
         kills[i] = 0
         damage[i] = 0
@@ -66,11 +66,14 @@ Hack.RegisterCallback("PaintTraverse", function ()
         local cPos = pCurrent:GetAbsOrigin()
         local lPos = pCurrent:GetAbsOrigin()
         local dist = Math.VectorDistance(lPos, cPos)
+        
         --This string below might be usefull for an alternate rendering when too far away
-        --Print((box.bottom - box.top) / 14)
+        --Print((box.bottom - box.top) / 15)
         local dist = Math.VectorDistance(pLocal:GetAbsOrigin(), pCurrent:GetAbsOrigin())
-        local size = Render.CalcTextSize_1("Kills: " .. kills[i], 15)
-        local sizeD = Render.CalcTextSize_1("Damage: " .. damage[i], 15)
+        local sizeZ = 15
+        if Menu.GetBool("cEnableTDamageSizing") then sizeZ = dist / 50 end
+        if dist < 1500 then sizeZ = 15 end
+        Print(sizeZ)
 
         local textPos = 0
         local onePercent = (box.bottom - box.top) / 100
@@ -79,23 +82,23 @@ Hack.RegisterCallback("PaintTraverse", function ()
         local clr = Menu.GetColor("cTDamageTextClr")
 
         if dist <= Menu.GetInt("cTDamageDraw") and Menu.GetBool("cEnableTDamageDDistance") then 
-            local kSize = Render.CalcTextSize_1("Kills: " .. kills[i], 15)
+            local kSize = Render.CalcTextSize_1("Kills: " .. kills[i], sizeZ)
             local x = box.right + 5
             if Menu.GetInt("cTDamageAlign") == 0 or Menu.GetInt("cTDamageAlign") == 2 then x = box.left - kSize.x - 5 end
-            Render.Text_1("Kills: " .. kills[i], x, textPos - 25, 15, clr, false, false)
+            Render.Text_1("Kills: " .. kills[i], x, textPos - 25, sizeZ, clr, false, false)
 
-            local dSize = Render.CalcTextSize_1("Damage: " .. damage[i], 15)
+            local dSize = Render.CalcTextSize_1("Damage: " .. damage[i], sizeZ)
             if Menu.GetInt("cTDamageAlign") == 0 or Menu.GetInt("cTDamageAlign") == 2 then x = box.left - dSize.x - 5 end
-            Render.Text_1("Damage: " .. damage[i], x, textPos - 10, 15, clr, false, false)
+            Render.Text_1("Damage: " .. damage[i], x, textPos - 10, sizeZ, clr, false, false)
         elseif not Menu.GetBool("cEnableTDamageDDistance") then
-            local kSize = Render.CalcTextSize_1("Kills: " .. kills[i], 15)
+            local kSize = Render.CalcTextSize_1("Kills: " .. kills[i], sizeZ)
             local x = box.right + 5
             if Menu.GetInt("cTDamageAlign") == 0 or Menu.GetInt("cTDamageAlign") == 2 then x = box.left - kSize.x - 5 end
-            Render.Text_1("Kills: " .. kills[i], x, textPos - 25, 15, clr, false, false)
+            Render.Text_1("Kills: " .. kills[i], x, textPos - 25, sizeZ, clr, false, false)
 
-            local dSize = Render.CalcTextSize_1("Damage: " .. damage[i], 15)
+            local dSize = Render.CalcTextSize_1("Damage: " .. damage[i], sizeZ)
             if Menu.GetInt("cTDamageAlign") == 0 or Menu.GetInt("cTDamageAlign") == 2 then x = box.left - dSize.x - 5 end
-            Render.Text_1("Damage: " .. damage[i], x, textPos - 10, 15, clr, false, false)
+            Render.Text_1("Damage: " .. damage[i], x, textPos - 10, sizeZ, clr, false, false)
         end
 
         ::skip::
