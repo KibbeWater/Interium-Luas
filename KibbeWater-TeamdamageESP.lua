@@ -60,7 +60,7 @@ Hack.RegisterCallback("PaintTraverse", function ()
     for i = 1, 64 do
         if IEngine.GetLocalPlayer() == i then goto skip end
         local pCurrent = IEntityList.GetPlayer(i) 
-        if (not pCurrent or pCurrent:GetClassId() ~= 40 or pCurrent:IsDormant()) then goto skip end
+        if (not pCurrent or pCurrent:GetClassId() ~= 40 or pCurrent:IsDormant() or not pCurrent:IsAlive() or not pCurrent:IsTeammate()) then goto skip end
 
         local box = pCurrent:GetBox()
         local cPos = pCurrent:GetAbsOrigin()
