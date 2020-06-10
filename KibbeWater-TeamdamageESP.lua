@@ -2,10 +2,15 @@
 Menu.Spacing()
 Menu.Separator()
 Menu.Spacing()
-Menu.Checkbox("Enable Teamdamage ESP", "cEnableTDamageESP", true)       
+Menu.Checkbox("Enable Teamdamage ESP", "cEnableTDamageESP", true)  
+Menu.Checkbox("Disable Main ESP check", "cDisableTDamageESPCheck", true)  
+Menu.Checkbox("Enemy Only", "cTDamageEnemy", true)  
+Menu.Checkbox("Enable Draw Distance", "cEnableTDamageDDistance", true)     
+Menu.SliderInt("Draw Distance", "cTDamageDraw", 500, 2000, "", 1250) 
+Menu.SliderInt("Position", "cTDamagePos", 0, 100, "", 0)
+Menu.Combo( "Alignment", "cTDamageAlign", { "Top Left", "Top Right", "Bottom Left", "Bottom Right"  }, 3)
+Menu.ColorPicker("Text Clr", "cTDamageTextClr", 255, 255, 255, 255)
 Menu.Separator()
-Menu.Text("INCASE TEAM DAMAGE LIST DOESN'T APPEAR")
-Menu.Checkbox("Reset Position", "cTDamageESPReset", false)
 
 --Global Vars
 local nextAutosave = 0
@@ -42,20 +47,15 @@ end
 
 Hack.RegisterCallback("PaintTraverse", function ()
     if not Menu.GetBool("cEnableTDamageESP") then return end
+    --if Menu.GetBool("cDisableTDamageESPCheck") and not Menu.GetBool("&Vars.esp_enabled") then return end
 
     if first then
         Setup()
         first = false
     end
 
-    --Reset pos
-    if Menu.GetBool("cTDamageESPReset") then
-        posX = 100
-        posY = 100
-        Menu.SetBool("cTDamageESPReset", false)
-    end
-
     local pLocal = IEntityList.GetPlayer(IEngine.GetLocalPlayer())
+    
 
     for i = 1, 64 do
         if IEngine.GetLocalPlayer() == i then goto skip end
@@ -63,12 +63,40 @@ Hack.RegisterCallback("PaintTraverse", function ()
         if (not pCurrent or pCurrent:GetClassId() ~= 40 or pCurrent:IsDormant()) then goto skip end
 
         local box = pCurrent:GetBox()
-        Print((box.bottom - box.top) / 14)
+        local cPos = pCurrent:GetAbsOrigin()
+        local lPos = pCurrent:GetAbsOrigin()
+        local dist = Math.VectorDistance(lPos, cPos)
+        --This string below might be usefull for an alternate rendering when too far away
+        --Print((box.bottom - box.top) / 14)
         local dist = Math.VectorDistance(pLocal:GetAbsOrigin(), pCurrent:GetAbsOrigin())
         local size = Render.CalcTextSize_1("Kills: " .. kills[i], 15)
         local sizeD = Render.CalcTextSize_1("Damage: " .. damage[i], 15)
-        Render.Text_1("Kills: " .. kills[i], box.right + 5, box.bottom - 25, 15, Color.new(255,255,255,255), false, false)
-        Render.Text_1("Damage: " .. damage[i], box.right + 5, box.bottom - 10, 15, Color.new(255,255,255,255), false, false)
+
+        local textPos = 0
+        local onePercent = (box.bottom - box.top) / 100
+        if Menu.GetInt("cTDamageAlign") == 0 or Menu.GetInt("cTDamageAlign") == 1 then textPos = (box.top + 20) + (Menu.GetInt("cTDamagePos") * onePercent) else textPos = box.bottom - (Menu.GetInt("cTDamagePos") * onePercent) end
+
+        local clr = Menu.GetColor("cTDamageTextClr")
+
+        if dist <= Menu.GetInt("cTDamageDraw") and Menu.GetBool("cEnableTDamageDDistance") then 
+            local kSize = Render.CalcTextSize_1("Kills: " .. kills[i], 15)
+            local x = box.right + 5
+            if Menu.GetInt("cTDamageAlign") == 0 or Menu.GetInt("cTDamageAlign") == 2 then x = box.left - kSize.x - 5 end
+            Render.Text_1("Kills: " .. kills[i], x, textPos - 25, 15, clr, false, false)
+
+            local dSize = Render.CalcTextSize_1("Damage: " .. damage[i], 15)
+            if Menu.GetInt("cTDamageAlign") == 0 or Menu.GetInt("cTDamageAlign") == 2 then x = box.left - dSize.x - 5 end
+            Render.Text_1("Damage: " .. damage[i], x, textPos - 10, 15, clr, false, false)
+        elseif not Menu.GetBool("cEnableTDamageDDistance") then
+            local kSize = Render.CalcTextSize_1("Kills: " .. kills[i], 15)
+            local x = box.right + 5
+            if Menu.GetInt("cTDamageAlign") == 0 or Menu.GetInt("cTDamageAlign") == 2 then x = box.left - kSize.x - 5 end
+            Render.Text_1("Kills: " .. kills[i], x, textPos - 25, 15, clr, false, false)
+
+            local dSize = Render.CalcTextSize_1("Damage: " .. damage[i], 15)
+            if Menu.GetInt("cTDamageAlign") == 0 or Menu.GetInt("cTDamageAlign") == 2 then x = box.left - dSize.x - 5 end
+            Render.Text_1("Damage: " .. damage[i], x, textPos - 10, 15, clr, false, false)
+        end
 
         ::skip::
     end
