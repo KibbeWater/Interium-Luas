@@ -22,6 +22,7 @@
 * Music Display - With custom Cross-Compatibility with WaterUI for displaying your current spotify song
 * Teamdamage List (TeamDamageESP) - Shows a list of how much damage you and your teammates has done, usefull for griefing
 * Grenade Helper - Show points in-game where you can stand and aim to throw a nade to a spesific spot
+* Menu Move - Move around while while in the cheat menu
 
 ## Private
 * BetaSpectatorList.lua - containing multiple designs made for friends etc
@@ -29,7 +30,7 @@
 ## Coming Soon
 
 ### Planned **Private** Releases
-* None
+* Movement Recorder - Gonna flex my fucking movement recorder on ALLLL of you
 
 ### Planned **Public** Release
 * KibbeWater UI Library - An advanced UI Library for lua developers to more easily create and manage UI elements
