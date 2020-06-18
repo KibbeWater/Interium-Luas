@@ -26,11 +26,12 @@
 
 ## Private
 * BetaSpectatorList.lua - containing multiple designs made for friends etc
+* Movement Recorder - Gonna flex my fucking movement recorder on ALLLL of you
 
 ## Coming Soon
 
 ### Planned **Private** Releases
-* Movement Recorder - Gonna flex my fucking movement recorder on ALLLL of you
+* None
 
 ### Planned **Public** Release
 * KibbeWater UI Library - An advanced UI Library for lua developers to more easily create and manage UI elements
