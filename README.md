@@ -23,6 +23,9 @@
 * Teamdamage List (TeamDamageESP) - Shows a list of how much damage you and your teammates has done, usefull for griefing
 * Grenade Helper - Show points in-game where you can stand and aim to throw a nade to a spesific spot
 * Menu Move - Move around while while in the cheat menu
+* Advanced Griefing - Small helper for griefing in MM
+* Time Elapsed - Small UI element to show how long CS has been open for
+* Velocity Graph V1 - Well, it's a velocity graph
 
 ## Private
 * BetaSpectatorList.lua - containing multiple designs made for friends etc
