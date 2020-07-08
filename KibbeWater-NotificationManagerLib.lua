@@ -3,7 +3,7 @@ Menu.Separator()
 Menu.Spacing()
 Menu.Checkbox('Enable Notification Manager', 'cEnableNotifManagerLib', true)
 Menu.Checkbox('Enable Light Notifications', 'cEnableLightNotifs', false)
-Menu.Checkbox('Enable Debug', 'cDebugNotifManagerLib', true)
+Menu.Checkbox('Enable Debug', 'cDebugNotifManagerLib', false)
 
 local API_Send = false
 local API_Payload = ""
