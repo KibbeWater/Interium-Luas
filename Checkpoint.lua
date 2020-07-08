@@ -4,6 +4,7 @@ Menu.Separator()
 Menu.Spacing()
 Menu.Checkbox("Enable Checkpoint", "cEnableCheckpoint", true)
 Menu.Checkbox("Checkpoint Text", "cEnableCheckpointText", true)
+Menu.Checkbox("Enable Notifications", "cEnableNotifications", true)
 Menu.KeyBind("Set Checkpoint", "cCheckpointSet", 67)
 Menu.KeyBind("Goto Checkpoint", "cCheckpointGoto", 220)
 Menu.KeyBind("Remove Checkpoint", "cCheckpointRemove", 70)
@@ -14,6 +15,15 @@ local currentAng = QAngle.new(0, 0, 0)
 local checkpointPos = Vector.new(0, 0, 0)
 local checkpointAng = Vector.new(0, 0, 0)
 local checkpointSet = false
+
+function SendNotif(ID, type, title, msg, clr, r, g, b, expire)
+    local clrBool = "false"
+    if clr then clrBool = "true" end
+    if Menu.GetInt("NM_API_Enabled") > IGlobalVars.realtime and Menu.GetBool("cEnableNotifications") then
+        Menu.SetString("NM_API_Payload", ID .. "*" .. type .. "*" .. title .. "*" .. msg .. "*" .. clrBool .. "*" .. r .. "*" .. g .. "*" .. b .. "*" .. (IGlobalVars.realtime + expire))
+        Menu.SetBool("NM_API_Send", true)
+    end
+end
 
 function PaintTraverse() 
     --Cross Compatibility
@@ -27,6 +37,7 @@ function PaintTraverse()
             checkpointPos = pLocal:GetAbsOrigin()
             checkpointAng = Vector.new(currentAng.pitch, currentAng.yaw, 0)
             checkpointSet = true
+            SendNotif("SetCheckpoint", 3, "Set Checkpoint", checkpointPos.x .. ", " .. checkpointPos.y .. ", " .. checkpointPos.z, true, 252, 3, 223, 4)
         end
 
         --Goto Checkpoint
@@ -38,6 +49,7 @@ function PaintTraverse()
 
         --Remove Checkpoint
         if(InputSys.IsKeyPress(Menu.GetInt("cCheckpointRemove"))) then
+            if checkpointSet then SendNotif("RMCheckpoint", 3, "Checkpoint", "Removed checkpoint", true, 252, 3, 223, 4) end
             checkpointSet = false
         end
         
