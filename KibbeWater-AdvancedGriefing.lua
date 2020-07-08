@@ -3,6 +3,7 @@ Menu.Separator()
 Menu.Spacing()
 Menu.Checkbox("Enable Grenade Helper", "cEnableGriefNadeHelper", true)
 Menu.Checkbox("Enable Autothrow", "cEnableAutothrow", true)
+Menu.Checkbox("Enable Notifications", "cEnableAGNotifs", true)
 Menu.Checkbox("Draw Line To Angle (nades)", "cGriefHelperDrawLineAngle", true)
 Menu.Checkbox("Draw Line To Kickable Decoys", "cGriefHelperDrawLineKickable", true)
 Menu.Checkbox("Draw Line To preffered decoy", "cGriefHelperDrawLinePreffered", true)
@@ -49,6 +50,22 @@ local startedAlign = -5
 --Old Data (for aligning)
 local oldDist = 420
 
+--For version handling
+local ver = "1.1"
+local notifNew = false
+local notifData = ""
+
+function Split (inputstr, sep)
+    if sep == nil then
+            sep = "%s"
+    end
+    local t={}
+    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+            table.insert(t, str)
+    end
+    return t
+end
+
 --well, the name said it
 function UIDToPlayer(uid)
     for i = 1, 64 do
@@ -66,6 +83,15 @@ function UIDToPlayer(uid)
     end
 end
 
+function SendNotif(ID, type, title, msg, clr, r, g, b, expire)
+    local clrBool = "false"
+    if clr then clrBool = "true" end
+    if Menu.GetInt("NM_API_Enabled") > IGlobalVars.realtime and Menu.GetBool("cEnableAGNotifs") then
+        Menu.SetString("NM_API_Payload", ID .. "*" .. type .. "*" .. title .. "*" .. msg .. "*" .. clrBool .. "*" .. r .. "*" .. g .. "*" .. b .. "*" .. (IGlobalVars.realtime + expire))
+        Menu.SetBool("NM_API_Send", true)
+    end
+end
+
 --Set initial settings
 function Setup()
     for i = 1, 64 do
@@ -76,6 +102,19 @@ function Setup()
         damage[i] = 0
 
         ::continue::
+    end
+    URLDownloadToFile("http://kibbewater.ml/ver/ag.txt", GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\ag.txt")
+    if FileSys.FileIsExist(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\ag.txt") then
+        local data = Split(FileSys.GetTextFromFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\ag.txt"), "\n")
+        if #data == 2 then
+            if ver ~= data[1] and Menu.GetInt("NM_API_Enabled") > IGlobalVars.realtime and not Menu.GetBool("NM_API_Send") and Menu.GetString("NM_API_Payload") == "" then
+                Menu.SetString("NM_API_Payload", "AGUpdates" .. "*" .. "1" .. "*" .. "Advanced Griefing Update" .. "*" .. "Please download version " .. data[1] .. " from interium.ooo" .. "*" .. "false" .. "*" .. "0" .. "*" .. "0" .. "*" .. "0" .. "*" .. (IGlobalVars.realtime + 7))
+                Menu.SetBool("NM_API_Send", true)
+            elseif Menu.GetInt("NM_API_Enabled") < IGlobalVars.realtime or Menu.GetBool("NM_API_Send") or Menu.GetString("NM_API_Payload") ~= "" then
+                notifData = "AGUpdates" .. "*" .. "1" .. "*" .. "Advanced Griefing Update" .. "*" .. "Please download version " .. data[1] .. " from interium.ooo" .. "*" .. "false" .. "*" .. "0" .. "*" .. "0" .. "*" .. "0" .. "*"
+                notifNew = true
+            end
+        end
     end
 end
 
@@ -147,6 +186,13 @@ Hack.RegisterCallback("PaintTraverse", function ()
     local localPos = pLocal:GetAbsOrigin()
     local grenade = false
     if wInfo.consoleName == "weapon_hegrenade" then grenade = true end
+    
+    if Menu.GetInt("NM_API_Enabled") > IGlobalVars.realtime and notifNew and not Menu.GetBool("NM_API_Send") and Menu.GetString("NM_API_Payload") == "" then
+        Menu.SetString("NM_API_Payload", notifData .. (IGlobalVars.realtime + 7))
+        Menu.SetBool("NM_API_Send", true)
+        notifNew = false
+        Print(IGlobalVars.realtime .. ": Sent " .. notifData .. (IGlobalVars.realtime + 7))
+    end
 
     if InputSys.IsKeyPress(Menu.GetInt("cGriefAlign")) and grenade then 
         startedAlign = IGlobalVars.realtime
@@ -494,13 +540,13 @@ end)
 Hack.RegisterCallback("FireEventClientSideThink", function(Event)
     if Event:GetName() == "decoy_started" then
         local Index = UIDToPlayer(Event:GetInt("userid"))
-        Print(GetUsername(Index))
         local owner = IEntityList.GetPlayer(Index)
         if owner:IsTeammate() then
             local i = #playerID+1
             entID[i] = Event:GetInt("entityid")
             startTime[i] = IGlobalVars.realtime
             playerID[i] = Event:GetInt("userid")
+            SendNotif("Decoy Started", 1, "Advanced Griefing", "Decoy thrown by \"" .. GetUsername(Index) .. "\"", false, 252, 3, 223, 4)
         end
     end
     if Event:GetName() == "decoy_detonate" then
