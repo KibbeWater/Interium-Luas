@@ -5,6 +5,7 @@ Menu.Spacing()
 Menu.Checkbox("Enable Speclist", "cEnableSpeclistPublic", true)
 Menu.Checkbox("Lock Position", "cSpeclistLockPublic", false)
 Menu.Checkbox("Enable RGB", "cEnableSpeclistRGBPublic", true)
+Menu.Checkbox("Enable Notifications", "cSpeclistNotifications", true)
 Menu.ColorPicker("Speclist Color", "cSpeclistColorPublic", 255, 255, 255, 255)
 Menu.Combo( "", "cSpecDesignPublic", { "Sown", "Aimware", "KibbeWater", "Beta", "Aiyu", "Sown v2" }, 0)
 Menu.SliderInt("Size", "cPosSizePublic", 1, 50, "", 27)
@@ -55,6 +56,11 @@ local Dragging = "f"
 local OldDragging = "f"
 local DraggingOffset = Vector.new(0, 0, 0)
 
+--For version handling
+local ver = "2.3"
+local notifNew = false
+local notifData = ""
+
 --Load up save
 FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater")
 local loadData = FileSys.GetTextFromFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\data.s")
@@ -68,8 +74,45 @@ local R = { 255, 0, 0, 0 }
 local G = { 0, 255, 0, 0 }
 local B = { 0, 0, 255, 0 }
 
+Sleep(458)
+
+function SendNotif(ID, type, title, msg, clr, r, g, b, expire, update)
+    local clrBool = "false"
+    if clr then clrBool = "true" end
+    if Menu.GetInt("NM_API_Enabled") > IGlobalVars.realtime then
+        if Menu.GetBool("cSpeclistNotifications") or update then
+            Menu.SetString("NM_API_Payload", ID .. "*" .. type .. "*" .. title .. "*" .. msg .. "*" .. clrBool .. "*" .. r .. "*" .. g .. "*" .. b .. "*" .. (IGlobalVars.realtime + expire))
+            Menu.SetBool("NM_API_Send", true)
+        end
+    end
+end
+
+function Setup()
+    URLDownloadToFile("http://kibbewater.ml/ver/spec.txt", GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\spec.txt")
+    if FileSys.FileIsExist(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\spec.txt") then
+        local data = Split(FileSys.GetTextFromFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\spec.txt"), "\n")
+        if #data == 2 then
+            if ver ~= data[1] and Menu.GetInt("NM_API_Enabled") > IGlobalVars.realtime and not Menu.GetBool("NM_API_Send") and Menu.GetString("NM_API_Payload") == "" then
+                Menu.SetString("NM_API_Payload", "SpecUpdates" .. "*" .. "1" .. "*" .. "Spectator List Update" .. "*" .. "Please download version " .. data[1] .. " from interium.ooo" .. "*" .. "false" .. "*" .. "0" .. "*" .. "0" .. "*" .. "0" .. "*" .. (IGlobalVars.realtime + 7))
+                Menu.SetBool("NM_API_Send", true)
+            elseif Menu.GetInt("NM_API_Enabled") < IGlobalVars.realtime or not Menu.GetBool("NM_API_Send") or Menu.GetString("NM_API_Payload") == "" then
+                notifData = "SpecUpdates" .. "*" .. "1" .. "*" .. "Spectator List Update" .. "*" .. "Please download version " .. data[1] .. " from interium.ooo" .. "*" .. "false" .. "*" .. "0" .. "*" .. "0" .. "*" .. "0" .. "*"
+                notifNew = true
+                Print("Awaiting, sending")
+            end
+        end
+    end
+end
+
 --Draw Spectator List
 function Paint()
+    if Menu.GetInt("NM_API_Enabled") > IGlobalVars.realtime and notifNew and not Menu.GetBool("NM_API_Send") and Menu.GetString("NM_API_Payload") == "" then
+        Print(IGlobalVars.realtime .. ": Sending")
+        Menu.SetString("NM_API_Payload", notifData .. (IGlobalVars.realtime + 7))
+        Menu.SetBool("NM_API_Send", true)
+        notifNew = false
+    end
+
     if not Menu.GetBool("cEnableSpeclistPublic") then return end
     if Utils.IsLocalAlive() then
         BuildSpecList(IEngine.GetLocalPlayer())
@@ -622,3 +665,5 @@ function FindTarget()
     
     return Target:GetIndex()
 end
+
+Setup()
