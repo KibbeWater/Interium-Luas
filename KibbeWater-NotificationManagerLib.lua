@@ -3,12 +3,14 @@ Menu.Separator()
 Menu.Spacing()
 Menu.Checkbox('Enable Notification Manager', 'cEnableNotifManagerLib', true)
 Menu.Checkbox('Enable Light Notifications', 'cEnableLightNotifs', false)
-Menu.Checkbox('Enable Debug', 'cDebugNotifManagerLib', false)
+Menu.Checkbox('Enable Debug', 'cDebugNotifManagerLib', true)
 
 local API_Send = false
 local API_Payload = ""
 
 local payloads = {}
+
+local ver = "1.1"
 
 --Register Functions
 function Split (inputstr, sep)
@@ -34,6 +36,16 @@ function Setup()
     --Reset needed functions
     Menu.SetBool("NM_API_Send", false)
     Menu.SetString("NM_API_Payload", "")
+
+    URLDownloadToFile("http://kibbewater.ml/ver/notif.txt", GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\notif.txt")
+    if FileSys.FileIsExist(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\notif.txt") then
+        local data = Split(FileSys.GetTextFromFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\notif.txt"), "\n")
+        if #data == 2 then
+            if ver ~= data[1] then
+                table.insert(payloads, "NotifUpdate" .. "*" .. "1" .. "*" .. "Notification Manager Update" .. "*" .. "Please download version " .. data[1] .. " from interium.ooo" .. "*" .. "false" .. "*" .. "0" .. "*" .. "0" .. "*" .. "0" .. "*" .. (IGlobalVars.realtime + 7))
+            end
+        end
+    end
 end
 
 function RecievePacket(payload)
@@ -44,6 +56,7 @@ function RecievePacket(payload)
         table.insert(payloads, payload)
         DebugPrint("Recieved Payload: \"" .. payload .. "\"")
     end
+    Menu.SetString("NM_API_Payload", "")
 end
 
 function DebugPrint(text)
