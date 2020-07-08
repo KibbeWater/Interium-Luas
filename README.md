@@ -27,6 +27,7 @@
 * Time Elapsed - Small UI element to show how long CS has been open for
 * Velocity Graph V1 - Well, it's a velocity graph
 * Chicken and Fish ESP - Fuck meeeee
+* Notification Manager LIB - Send notifications to screen with a sleek design
 
 ## Private
 * BetaSpectatorList.lua - containing multiple designs made for friends etc
