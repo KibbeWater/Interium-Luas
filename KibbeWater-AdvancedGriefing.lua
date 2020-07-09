@@ -9,6 +9,7 @@ Menu.Checkbox("Draw Line To Kickable Decoys", "cGriefHelperDrawLineKickable", tr
 Menu.Checkbox("Draw Line To preffered decoy", "cGriefHelperDrawLinePreffered", true)
 Menu.SliderInt("Grenade Helper Render Distance", "cGriefHelperRenderDistance", 50, 2000, "", 1000)
 Menu.KeyBind("Auto-Align with closest point", "cGriefAlign", 0)
+Menu.KeyBind("Throw 2HP Grenade", "cAGriefNadeThrow", 0)
 
 local displayedID = 0
 local map = ""
@@ -51,9 +52,16 @@ local startedAlign = -5
 local oldDist = 420
 
 --For version handling
-local ver = "1.1"
+local ver = "1.2"
 local notifNew = false
 local notifData = ""
+
+--New 2HP grenade method
+local throwType = 0
+local executeTime = 0
+local executeStart = 0
+
+local va = QAngle.new(0,0,0)
 
 function Split (inputstr, sep)
     if sep == nil then
@@ -483,6 +491,60 @@ Hack.RegisterCallback("CreateMove", function (cmd, send)
         loadedMap = {}
     end
     if (not Menu.GetBool("cEnableHelper") or not Utils.IsLocal()) then return end
+
+    local weapon = pLocal:GetActiveWeapon()
+    if (not weapon) then return end
+
+    local wInfo = weapon:GetWeaponData()
+    if (not wInfo) then return end
+
+    local grenade = false
+    if wInfo.consoleName == "weapon_hegrenade" then grenade = true end
+
+    if InputSys.IsKeyPress(Menu.GetInt("cAGriefNadeThrow")) and throwType == 0 and grenade then
+        executeStart = IGlobalVars.realtime
+        executeTime = 0.5
+        throwType = 1
+    end
+    if throwType == 1 then
+        if executeStart <= IGlobalVars.realtime then
+            if executeStart + executeTime >= IGlobalVars.realtime then
+                cmd.buttons = SetBit(cmd.buttons, 0)
+            else
+                executeStart = IGlobalVars.realtime
+                executeTime = 0.7
+                throwType = 2
+            end
+        end
+    end
+    if throwType == 2 then
+        if executeStart <= IGlobalVars.realtime then
+            if executeStart + executeTime >= IGlobalVars.realtime then
+                cmd.buttons = SetBit(cmd.buttons, 11)
+            else
+                executeStart = IGlobalVars.realtime + 0.7
+                executeTime = 2
+                throwType = 3
+            end
+        end
+    end
+    if throwType == 3 then
+        if executeStart <= IGlobalVars.realtime then
+            if executeStart + executeTime >= IGlobalVars.realtime then
+                cmd.buttons = SetBit(cmd.buttons, 2)
+            else
+                executeStart = 0
+                executeTime = 0
+                throwType = 0
+            end
+        end
+    end
+    if throwType ~= 0 then
+        cmd.viewangles = QAngle.new(-89.0, cmd.viewangles.yaw, 0)
+        cmd.forwardmove = 0
+        cmd.sidemove = 0
+    end
+    va = cmd.viewangles
 
     map = IEngine.GetLevelNameShort()
 
