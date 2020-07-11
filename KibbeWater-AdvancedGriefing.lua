@@ -194,7 +194,16 @@ Hack.RegisterCallback("PaintTraverse", function ()
     local localPos = pLocal:GetAbsOrigin()
     local grenade = false
     if wInfo.consoleName == "weapon_hegrenade" then grenade = true end
-    
+    local pass1 = false
+    local pass2 = false
+    local pass3 = false
+    if InputSys.IsKeyDown(Menu.GetInt("cAGriefNadeThrow")) then pass1 = true end
+    if throwType == 0 then pass2 = true end
+    if grenade then pass3 = true end
+    Render.Text_1("Viewangles: " .. va.pitch .. ", " .. va.yaw .. ", " .. va.roll, 10, 440, 15, Color.new(255,255,255,255), false, false)
+    Render.Text_1("Throw Type: " .. throwType, 10, 455, 15, Color.new(255,255,255,255), false, false)
+    Render.Text_1("Pressing: " .. Bool2String(pass1) .. " " .. Bool2String(pass2) .. " " .. Bool2String(pass3), 10, 470, 15, Color.new(255,255,255,255), false, false)
+
     if Menu.GetInt("NM_API_Enabled") > IGlobalVars.realtime and notifNew and not Menu.GetBool("NM_API_Send") and Menu.GetString("NM_API_Payload") == "" then
         Menu.SetString("NM_API_Payload", notifData .. (IGlobalVars.realtime + 7))
         Menu.SetBool("NM_API_Send", true)
@@ -490,7 +499,7 @@ Hack.RegisterCallback("CreateMove", function (cmd, send)
         displayedID = 0
         loadedMap = {}
     end
-    if (not Menu.GetBool("cEnableHelper") or not Utils.IsLocal()) then return end
+    if (not Menu.GetBool("cEnableGriefNadeHelper")) then return end
 
     local weapon = pLocal:GetActiveWeapon()
     if (not weapon) then return end
@@ -500,11 +509,13 @@ Hack.RegisterCallback("CreateMove", function (cmd, send)
 
     local grenade = false
     if wInfo.consoleName == "weapon_hegrenade" then grenade = true end
-
+    Print("Grenade: " .. Bool2String(grenade))
     if InputSys.IsKeyPress(Menu.GetInt("cAGriefNadeThrow")) and throwType == 0 and grenade then
+        Print("Pressing1")
         executeStart = IGlobalVars.realtime
         executeTime = 0.5
         throwType = 1
+        Print("Pressing2")
     end
     if throwType == 1 then
         if executeStart <= IGlobalVars.realtime then
