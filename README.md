@@ -1,12 +1,5 @@
 # Interium Luas
 
-## Goals
-- [x] Become "Lua Maker"
-- [X] Become "Lua God"
-- [X] Publish First Public Lua
-- [X] Finish 5 Luas
-- [X] Finish 10 Luas
-
 ## Ideas?
 - If you have an idea please submit them to me on Discord. **@snow#2030**
 - If I decide to make it I'll add it to my github and you will recieve an encrypted copy
