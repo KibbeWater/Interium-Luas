@@ -16,6 +16,11 @@ local checkpointPos = Vector.new(0, 0, 0)
 local checkpointAng = Vector.new(0, 0, 0)
 local checkpointSet = false
 
+local cancel = true
+
+--Offsets
+local vVelocity_Offset = Hack.GetOffset("DT_BasePlayer", "m_vecVelocity[0]")
+
 function SendNotif(ID, type, title, msg, clr, r, g, b, expire)
     local clrBool = "false"
     if clr then clrBool = "true" end
@@ -44,7 +49,7 @@ function PaintTraverse()
         if(InputSys.IsKeyPress(Menu.GetInt("cCheckpointGoto")) and checkpointSet) then
             IEngine.ExecuteClientCmd("setpos_exact " .. checkpointPos.x .. " " .. checkpointPos.y .. " " .. checkpointPos.z)
             IEngine.ExecuteClientCmd("setang_exact " .. checkpointAng.x .. " " .. checkpointAng.y)
-            Print("setang_exact " .. checkpointAng.pitch .. " " .. checkpointAng.yaw)
+            cancel = true
         end
 
         --Remove Checkpoint
@@ -86,7 +91,7 @@ function PaintTraverse()
             local dist = Math.VectorDistance(pos, pLocal:GetAbsOrigin())
 
             if(Math.WorldToScreen(textWPos, textPos) and Menu.GetBool("cEnableCheckpointText")) then
-                Render.Text_1("Checkpoint\n" .. math.floor(dist) .. " units to target", textPos.x, textPos.y, 20, Color.new(200,200,200,255), true, false)
+                Render.Text_1("Checkpoint\n" .. math.floor(dist) .. " From target", textPos.x + 10, textPos.y, 20, Color.new(200,200,200,255), false, false)
             end
         end
     end
@@ -95,5 +100,21 @@ Hack.RegisterCallback("PaintTraverse", PaintTraverse)
 
 function CreateMove(cmd, sendPacket)
     currentAng = cmd.viewangles
+
+    local pLocal = IEntityList.GetPlayer(IEngine.GetLocalPlayer())
+    if not pLocal or not Utils.IsLocalAlive() then return end
+
+    local vel = pLocal:GetPropVector(vVelocity_Offset)
+
+    if cancel then
+        Utils.CorrectMovement(QAngle.new(0,0,0), cmd, (vel.x * 1.75) * -1, vel.y, false)
+        if vel.x < 15 and vel.x > -15 then 
+            if vel.y < 15 and vel.y > -15 then 
+                cancel = false 
+                IEngine.ExecuteClientCmd("setpos_exact " .. checkpointPos.x .. " " .. checkpointPos.y .. " " .. checkpointPos.z)
+                IEngine.ExecuteClientCmd("setang_exact " .. checkpointAng.x .. " " .. checkpointAng.y)
+            end
+        end
+    end
 end
 Hack.RegisterCallback("CreateMove", CreateMove)  
