@@ -7,7 +7,7 @@ Menu.Checkbox("Lock Position", "cSpeclistLockPublic", false)
 Menu.Checkbox("Enable RGB", "cEnableSpeclistRGBPublic", true)
 Menu.Checkbox("Enable Notifications", "cSpeclistNotifications", true)
 Menu.ColorPicker("Speclist Color", "cSpeclistColorPublic", 255, 255, 255, 255)
-Menu.Combo( "", "cSpecDesignPublic", { "Sown", "Aimware", "KibbeWater", "Beta", "Aiyu", "Sown v2" }, 0)
+Menu.Combo( "Spectator Design", "cSpecDesignPublic", { "Sown", "Aimware", "KibbeWater", "Beta", "Aiyu", "Sown v2", "MillionWare" }, 6)
 Menu.SliderInt("Size", "cPosSizePublic", 1, 50, "", 27)
 Menu.Separator()
 Menu.Text("INCASE SPECTATOR LIST DOESN'T APPEAR")
@@ -31,14 +31,14 @@ Render.LoadFont("sunflowerrr", GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\k
 
 --Debug
 local fakeNames = {} --This is permanent now? ok
+local fakeIDs = {}
+local loadedUsers = {}
 
 --Offsets
-local Health_Offset = Hack.GetOffset("DT_BasePlayer", "m_iHealth");
 local obsModeOffset = Hack.GetOffset("DT_BasePlayer", "m_iObserverMode")
 local obsTargetOffset = Hack.GetOffset("DT_BasePlayer", "m_hObserverTarget")
 
 --Global Vars
-local pLocal = IEntityList.GetPlayer(IEngine.GetLocalPlayer()) 
 local nextAutosave = 0
 
 --Settings
@@ -56,14 +56,18 @@ local Dragging = "f"
 local OldDragging = "f"
 local DraggingOffset = Vector.new(0, 0, 0)
 
+local letScan = true
+
 --For version handling
 local ver = "2.3"
 local notifNew = false
 local notifData = ""
 
 --Load up save
+local basePath = GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Spectator List\\"
 FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater")
-local loadData = FileSys.GetTextFromFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\data.s")
+FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Spectator List\\")
+local loadData = FileSys.GetTextFromFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Spectator List\\data.s")
 local ParsedData = Split(loadData, ",")
 posX = tonumber(ParsedData[1])
 posY = tonumber(ParsedData[2])
@@ -73,8 +77,6 @@ local Type = { 0, 0, 0, 0 }
 local R = { 255, 0, 0, 0 }
 local G = { 0, 255, 0, 0 }
 local B = { 0, 0, 255, 0 }
-
-Sleep(458)
 
 function SendNotif(ID, type, title, msg, clr, r, g, b, expire, update)
     local clrBool = "false"
@@ -104,6 +106,23 @@ function Setup()
     end
 end
 
+function Exists(table, value) 
+    for i = 1, #table do
+        if table[i] == value then return true end
+    end
+    return false
+end
+
+function IndexToSteam64(idx) 
+    local pEnt = IEntityList.GetPlayer(idx)
+    if not pEnt then return end
+
+    local entInfo = CPlayerInfo.new()
+    if not pEnt:GetPlayerInfo(entInfo) then return end
+
+    return entInfo.steamID64
+end
+
 --Draw Spectator List
 function Paint()
     if Menu.GetInt("NM_API_Enabled") > IGlobalVars.realtime and notifNew and not Menu.GetBool("NM_API_Send") and Menu.GetString("NM_API_Payload") == "" then
@@ -112,12 +131,41 @@ function Paint()
         Menu.SetBool("NM_API_Send", true)
         notifNew = false
     end
+    
+    if not Utils.IsInGame() then 
+        letScan = true
+        return
+    end
 
     if not Menu.GetBool("cEnableSpeclistPublic") then return end
     if Utils.IsLocalAlive() then
         BuildSpecList(IEngine.GetLocalPlayer())
     else
         BuildSpecList(FindTarget())
+    end
+
+    if letScan then
+        local loaded = false
+        for i = 1, 64 do
+            if loaded then goto skip end
+
+            local pEnt = IEntityList.GetPlayer(i)
+            if not pEnt then goto skip end
+
+            local entInfo = CPlayerInfo.new()
+            if not pEnt:GetPlayerInfo(entInfo) then goto skip end
+
+            if Exists(loadedUsers, entInfo.steamID64) then goto skip end
+
+            Print("Loading " .. entInfo.szName .. "'s icon")
+            URLDownloadToFile("https://www.kibbewater.xyz/interium/getavatar?steamid=" .. entInfo.steamID64, basePath .. entInfo.steamID64 .. ".jpg")
+            Render.LoadImage(entInfo.steamID64, basePath .. entInfo.steamID64 .. ".jpg")
+            table.insert(loadedUsers, entInfo.steamID64)
+            loaded = true
+
+            ::skip::
+        end
+        if not loaded then letScan = false end
     end
 
     if Menu.GetBool("cSpeclistReset") then
@@ -129,6 +177,12 @@ function Paint()
     --Set Size 
     sizeY = Menu.GetInt("cPosSizePublic")
     sizeX = sizeY * 6.481481481481481
+
+    local pLocal = IEntityList.GetPlayer(IEngine.GetLocalPlayer())
+    if not pLocal then return end
+
+    local info = CPlayerInfo.new()
+    if not pLocal:GetPlayerInfo(info) then return end
 
     if Menu.GetInt("cSpecDesignPublic") == 0 then --Sown
 
@@ -386,7 +440,7 @@ function Paint()
             extensionSizeY = extensionSizeY + Render.CalcTextSize(fakeNames[i], 15, "sunflowerr").y
         end
 
-        FileSys.SaveTextToFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\data.s", posX .. "," .. posY)
+        FileSys.SaveTextToFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Spectator List\\data.s", posX .. "," .. posY)
     elseif Menu.GetInt("cSpecDesignPublic") == 4 then --Aiyu
         --Draw Extension
         local extensionSizeY = 0
@@ -498,11 +552,76 @@ function Paint()
             if not Menu.GetBool("cSownSpecLightMode") then Render.Text(fakeNames[i], posX + 6, posY + extensionSizeY, 17, Color.new(255,255,255,255), false, true, "sunflower") else Render.Text(fakeNames[i], posX + 6, posY + extensionSizeY, 17, Color.new(0,0,0,255), false, true, "sunflower") end
             extensionSizeY = extensionSizeY + Render.CalcTextSize(fakeNames[i], 15, "sunflower").y
         end
+    elseif Menu.GetInt("cSpecDesignPublic") == 6 then
+
+        --Dragging System
+        local cursor = InputSys.GetCursorPos()
+
+        --Check if box is able to be dragged
+        if cursor.x >= posX and cursor.x <= posX + 250 then
+            if cursor.y >= posY and cursor.y <= posY + 22 then
+                if InputSys.IsKeyDown(1) and not Menu.GetBool("cSpeclistLockPublic") then
+                    Dragging = "t" --supposed to be a bool but I was way to fucking lazy to change it from my old string system (I did parsing be fucking proud atleast)
+                else
+                    Dragging = "f"
+                end
+            else
+                if InputSys.IsKeyDown(0) or OldDragging == "f" then Dragging = "f" end
+            end
+        else
+            if InputSys.IsKeyDown(0) or OldDragging == "f" then Dragging = "f" end
+        end
+
+        --Draw Extension
+        local extensionSizeY = 0
+
+        for i = 1, #fakeNames do
+            extensionSizeY = extensionSizeY + 6
+            local textSizeS = Render.CalcTextSize(fakeNames[i], 11, "sunflower")
+            extensionSizeY = extensionSizeY + textSizeS.y + 6
+        end
+        extensionSizeY = extensionSizeY + 9
+
+        --Main box
+        Render.RectFilledMultiColor(posX, posY, posX + 250, posY + 18 + extensionSizeY, Color.new(20,20,20,255), Color.new(20,20,20,255), Color.new(11,11,11,255), Color.new(11,11,11,255))
+
+        --Border
+        Render.Rect(posX-1, posY-1, posX + 251, posY + 17 + extensionSizeY, Color.new(0,0,0,255), 0, 1)
+        --Render.Rect(posX-2, posY-2, posX + 202, posY + 18 + extensionSizeY, Color.new(0,0,0,255), 0, 1)
+
+        if #fakeNames == 0 then
+            Render.RectFilled(posX + 8, posY + 19, (posX + 250) - 8, posY + 21, Color.new(11,11,11,255), 0)
+        end
+        local specTestS = Render.CalcTextSize_1("Spectators", 11)
+        Render.Text_1("Spectators", posX+125, posY+11 - (specTestS.y / 2) - 2, 13, Color.new(255,255,255,255), true, true)
+        
+
+        --Draw Extension
+        extensionSizeY = 0
+        for i = 1, #fakeNames do
+            
+            extensionSizeY = extensionSizeY + 6
+            local textSizeS = Render.CalcTextSize(fakeNames[i], 11, "sunflower")
+            Render.RectFilled(posX+8+19, (posY + extensionSizeY + 18 + (textSizeS.y/2))-10, posX + 242, (posY + extensionSizeY + 18 + (textSizeS.y/2))+10, Color.new(18,18,18,255))
+            Render.Text(fakeNames[i], posX + 12 + 30, posY + extensionSizeY + 18, 11, Color.new(255,255,255,255), false, false, "sunflower")            
+
+            local col = 11
+
+            --Border
+            Render.Rect(posX+8+19, (posY + extensionSizeY + 16 + (textSizeS.y/2))-10, posX + 242, (posY + extensionSizeY + 18 + (textSizeS.y/2))+10, Color.new(col,col,col,255), 0, 1)
+            --Render.Rect(posX+8+19, (posY + extensionSizeY + 16 + (textSizeS.y/2))-9, posX + 191, (posY + extensionSizeY + 16 + (textSizeS.y/2))+9, Color.new(col,col,col,255), 0, 1)
+
+            --Render image
+            Render.Image(IndexToSteam64(fakeIDs[i]), posX+8, (posY + extensionSizeY + 18 + (textSizeS.y/2))-10, posX+8+20, (posY + extensionSizeY + 18 + (textSizeS.y/2))+10, Color.new(255,255,255,255), 0, 0, 1, 1)
+            
+            extensionSizeY = extensionSizeY + textSizeS.y + 6
+        end
+        extensionSizeY = extensionSizeY + 9
     end
 
     --Coderman optimize b4 release
     if nextAutosave <= IGlobalVars.realtime then
-        FileSys.SaveTextToFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\data.s", posX .. "," .. posY)
+        FileSys.SaveTextToFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Spectator List\\data.s", posX .. "," .. posY)
         nextAutosave = IGlobalVars.realtime + secBeforeAutoSave
     end
 end
@@ -524,6 +643,12 @@ function FrameStageNotify(stage)
     OldDragging = Dragging
 end
 Hack.RegisterCallback("FrameStageNotify", FrameStageNotify)
+
+Hack.RegisterCallback("FireEventClientSideThink", function (Event)
+    if Event:GetName() == "round_start" then
+        letScan =  true
+    end
+end)
 
 function Split (inputstr, sep)
     if sep == nil then
@@ -605,12 +730,12 @@ function Rainbow(Strong,Type, r, g, b)
 	return Strong,Type, r, g, b
 end
 
---Srry for pasting but I had to, worked ages to try make this
 function BuildSpecList(TargetIndex)
     fakeNames = {}
-
+    fakeIDs = {}
+    
     if (TargetIndex == -1 or Globals.MenuOpened()) then return end
-
+    
     for i = 1, 64 do
         if (i == IEngine.GetLocalPlayer()) then goto continue end
 
@@ -641,6 +766,7 @@ function BuildSpecList(TargetIndex)
   
         if (PlayerObserverMode == 4 or PlayerObserverMode == 5) then
             table.insert(fakeNames, PlayerInfo.szName)
+            table.insert(fakeIDs, i)
         end
 
 
