@@ -144,7 +144,7 @@ function Paint()
         BuildSpecList(FindTarget())
     end
 
-    if letScan then
+    if letScan and Menu.GetBool("cSpecDesignPublic") then
         local loaded = false
         for i = 1, 64 do
             if loaded then goto skip end
@@ -166,6 +166,8 @@ function Paint()
             ::skip::
         end
         if not loaded then letScan = false end
+    elseif not Menu.GetBool("cSpecDesignPublic") then
+        letScan = true
     end
 
     if Menu.GetBool("cSpeclistReset") then
