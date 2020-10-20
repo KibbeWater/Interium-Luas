@@ -19,13 +19,12 @@
 * Advanced Griefing - Small helper for griefing in MM
 * Time Elapsed - Small UI element to show how long CS has been open for
 * Velocity Graph V1 - Well, it's a velocity graph
-* Chicken and Fish ESP - Fuck meeeee
+* Chicken and Fish ESP - Simple example ESP
 * Notification Manager LIB - Send notifications to screen with a sleek design
 * Bomb Timer - Animated bomb timer
 
 ## Private
-* BetaSpectatorList.lua - containing multiple designs made for friends etc
-* Movement Recorder - Gonna flex my fucking movement recorder on ALLLL of you
+* Movement Recorder - Check forum to find buy page
 
 ## Coming Soon
 
@@ -34,5 +33,4 @@
 
 ### Planned **Public** Release
 * KibbeWater UI Library - An advanced UI Library for lua developers to more easily create and manage UI elements
-* Health Glow - Changes player glow depending on player HP
-* Interium Plus - Add more customizability like toggles custom background fade when opening menu and more
+* Interium Plus (?) - Adding stuff such as a public chat rooms and ability to find other interium users
