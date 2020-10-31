@@ -90,7 +90,7 @@ function SendNotif(ID, type, title, msg, clr, r, g, b, expire, update)
 end
 
 function Setup()
-    URLDownloadToFile("http://kibbewater.ml/ver/spec.txt", GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\spec.txt")
+    URLDownloadToFile("http://kibbewater.xyz/ver/spec.txt", GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\spec.txt")
     if FileSys.FileIsExist(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\spec.txt") then
         local data = Split(FileSys.GetTextFromFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\spec.txt"), "\n")
         if #data == 2 then
@@ -144,7 +144,7 @@ function Paint()
         BuildSpecList(FindTarget())
     end
 
-    if letScan and Menu.GetBool("cSpecDesignPublic") then
+    if letScan and Menu.GetInt("cSpecDesignPublic") == 6 then
         local loaded = false
         for i = 1, 64 do
             if loaded then goto skip end
