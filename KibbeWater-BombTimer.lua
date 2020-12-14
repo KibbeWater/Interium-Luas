@@ -1,11 +1,22 @@
--- Init Menu
 Menu.Spacing()
+Menu.Separator()
+Menu.Spacing()
+Menu.Text("KibbeWater - Bomb Timer")
+Menu.Spacing()
+Menu.Spacing()
+Menu.Spacing()
+Menu.Checkbox("Auto Defuse", "cAutoDef", true)
+Menu.Spacing()
+Menu.Spacing()
+Menu.Text("Customization")
 Menu.Separator()
 Menu.Spacing()
 Menu.ColorPicker("Text Color", "cBombClrText", 255, 255, 255, 255)
 Menu.ColorPicker("Time Color", "cBombClrTime", 0, 255, 0, 255)
 Menu.ColorPicker("Background Color", "cBombClrBG", 33, 36, 41, 255)
 Menu.ColorPicker("Line Color", "cBombClrLine", 255, 152, 244, 255)
+Menu.ColorPicker("Defusing bar can defuse Color", "cBombClrDefLineCan", 255, 255, 255, 255)
+Menu.ColorPicker("Defusing bar can't defuse Color", "cBombClrDefLineCant", 255, 0, 0, 255)
 
 local FPS = 60
 
@@ -54,6 +65,7 @@ local DefuseTime_Offset = Hack.GetOffset("DT_PlantedC4", "m_flDefuseLength")
 local DefuseCountdown_Offset = Hack.GetOffset("DT_PlantedC4", "m_flDefuseCountDown")
 local Defused_Offset = Hack.GetOffset("DT_PlantedC4", "m_bBombDefused")
 local Defuser_Offset = Hack.GetOffset("DT_PlantedC4", "m_hBombDefuser")
+local HasDefuser_Offset = Hack.GetOffset("DT_CSPlayer", "m_bHasDefuser")
 
 Hack.RegisterCallback("PaintTraverse", function()
     local sizeXLine = 150 - 10
@@ -92,7 +104,9 @@ Hack.RegisterCallback("PaintTraverse", function()
     local tSize = Render.CalcTextSize_1("TIMER: ", 20)
     if animStage >= 4 then Render.Text_1(timeLeft, tSize.x + 16 + 3, 588, 20, timeClr, false, false) end
     if animStage >= 4 and defusing then Render.Text_1("DEFUSING", ((144 - 6) / 2) + 10, ((550 + 150) - 20) - 35, 20, textClr, true, false) end
-    if animStage >= 4 and defusing and sizeXOutOfNames > 0 then Render.RectFilled(16, ((550 + 150) - 20) - 10, sizeXOutOfNames + 16, (550 + 150) - 20, textClr, 1) end
+    local defClr = Menu.GetColor("cBombClrDefLineCan")
+    if timeLeft < defuseTimeLeft then defClr = Menu.GetColor("cBombClrDefLineCant") end
+    if animStage >= 4 and defusing and sizeXOutOfNames > 0 then Render.RectFilled(16, ((550 + 150) - 20) - 10, sizeXOutOfNames + 16, (550 + 150) - 20, defClr, 1) end
 
     if animStage == 1 and IGlobalVars.realtime > nextAnim then
         percentAnimatedLine = percentAnimatedLine + 1
@@ -136,9 +150,11 @@ Hack.RegisterCallback("PaintTraverse", function()
 
     for i = 1, IEntityList.GetHighestEntityIndex() do
         local ent = IEntityList.GetEntity(i)
-        if not ent or ent:GetClassId() ~= 128 then goto continue end
+        if not ent or ent:GetClassId() ~= 129 then goto continue end
         local bomb = IEntityList.GetPlantedC4(i)
         if not bomb then goto continue end
+        local pLocal = IEntityList.GetPlayer(IEngine.GetLocalPlayer()) 
+        if (not pLocal) then return end
         timeLeft = bomb:GetPropFloat(Blow_Offset) - IGlobalVars.curtime
         site = bomb:GetPropInt(Site_Offset)
         ticking = bomb:GetPropBool(Ticking_Offset)
@@ -149,6 +165,16 @@ Hack.RegisterCallback("PaintTraverse", function()
         if defused then timeLeft = 0 end
         local defuser = bomb:GetPropInt(Defuser_Offset) 
         if defuser ~= -1 then defusing = true else defusing = false end
+
+        if Menu.GetBool("cAutoDef") and Utils.IsLocalAlive() and ticking then
+            local hasDefkit = pLocal:GetPropBool(HasDefuser_Offset)
+            local defuseTimeK = 10 / 2
+            if not hasDefkit then defuseTimeK = 10 end
+
+            if timeLeft <= defuseTimeK+0.05 and Math.VectorDistance(bomb:GetAbsOrigin(), pLocal:GetAbsOrigin()) < 50 then
+                InputSys.SendKey(18)
+            end
+        end
         ::continue::
     end
 
@@ -164,6 +190,22 @@ Hack.RegisterCallback("PaintTraverse", function()
         percentAnimatedText = 0
     end
 
+    if IGlobalVars.realtime > nextAnim then
+        if animStage == 1 then
+            nextAnim = IGlobalVars.realtime + 1 / FPS
+            percentNeededLine = animationTimeLine * FPS
+        elseif animStage == 3 then
+            nextAnim = IGlobalVars.realtime + 1 / FPS
+            percentNeededBox = animationTimeBox * FPS
+        elseif animStage == 4 then
+            nextAnim = IGlobalVars.realtime + 1 / FPS
+            percentNeededText = animationTimeText * FPS
+        elseif animStage == 6 then
+            nextAnim = IGlobalVars.realtime + 1 / FPS
+            percentNeededFade = animationTimeFade * FPS
+        end
+    end
+
     oldTicking = ticking
 end)
 
@@ -171,5 +213,6 @@ Hack.RegisterCallback("FireEventClientSideThink", function (event)
 	if event:GetName() == "round_start" then
 		timeLeft = 0
 		ticking = false
-	end
+    end
+    Print(event:GetName())
 end)
