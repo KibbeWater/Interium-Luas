@@ -3,6 +3,7 @@
 ## Ideas?
 - If you have an idea please submit them to me on Discord. **@snow#2030**
 - If I decide to make it I'll add it to my github and you will recieve an encrypted copy
+- CURRENTLY NOT TAKING SUGGESTIONS AS I'M REALLY BUSY
 
 ## What is Interium?
 [Interium](https://interium.ooo/forum/member.php?action=register&referrer=16) is a legit cheat in CS:GO with a fantastic LUA Api
@@ -22,6 +23,7 @@
 * Chicken and Fish ESP - Simple example ESP
 * Notification Manager LIB - Send notifications to screen with a sleek design
 * Bomb Timer - Animated bomb timer
+* Keystrokes - Displaying keypresses
 
 ## Private
 * Movement Recorder - Check forum to find buy page
@@ -32,5 +34,4 @@
 * None
 
 ### Planned **Public** Release
-* KibbeWater UI Library - An advanced UI Library for lua developers to more easily create and manage UI elements
 * Interium Plus (?) - Adding stuff such as a public chat rooms and ability to find other interium users
