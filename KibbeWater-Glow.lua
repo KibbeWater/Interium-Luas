@@ -11,7 +11,6 @@ Menu.Checkbox("Visible Only", "snowGlowVischeck", false)
 Menu.Checkbox("fullBloom", "snowGlowFullbloom", false)
 Menu.SliderFloat('Opacity', 'snowGlowAlpha', 0.1, 1, 1.0, 1.0)
 Menu.SliderFloat('Bloom', 'snowGlowBloom', 0.1, 1, 1.0, 1.0)
-Menu.InputFloat("Testval", "snowGlowTest", 0.5)
 Menu.Combo('Style', 'snowGlowStyle', {"Full", "Inline + Flicker", "Inline Glow", "Flicker"}, 0)
 Menu.Combo('Color Style', 'snowGlowClrStyle', {"Rainbow", "Health"}, 0)
 
@@ -74,6 +73,7 @@ Hack.RegisterCallback("DrawModelExecute", function ()
     local r = math.floor(math.sin(IGlobalVars.realtime * chromaSpeed) * 127 + 128)
     local g = math.floor(math.sin(IGlobalVars.realtime * chromaSpeed + 2) * 127 + 128)
     local b = math.floor(math.sin(IGlobalVars.realtime * chromaSpeed + 4) * 127 + 128)
+    local a = math.floor(math.sin(IGlobalVars.realtime * 5.5 + 6) * 127 + 128)
 
     local rainbow = Color.new(r,g,b,Menu.GetFloat("snowGlowAlpha")*255)
 
@@ -106,7 +106,13 @@ Hack.RegisterCallback("DrawModelExecute", function ()
         local wantedClr = healthGlow
         if Menu.GetInt("snowGlowClrStyle") == 0 then wantedClr = rainbow end
 
-        if (not canSee and not Menu.GetBool("snowGlowVischeck")) or canSee then WriteGlow(pEnt, wantedClr, Menu.GetInt("snowGlowStyle"), Menu.GetBool("snowGlowFullbloom")) end
+        local controlledStyle = Menu.GetInt("snowGlowStyle")
+        if controlledStyle == 3 then 
+            controlledStyle = 0
+            wantedClr.a = a
+        end
+
+        if (not canSee and not Menu.GetBool("snowGlowVischeck")) or canSee then WriteGlow(pEnt, wantedClr, controlledStyle, Menu.GetBool("snowGlowFullbloom")) end
 
         ::skip::
     end
