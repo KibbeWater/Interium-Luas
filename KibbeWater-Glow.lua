@@ -1,5 +1,17 @@
+Menu.Spacing()
+Menu.Separator()
+Menu.Spacing()
+Menu.Text("KibbeWater - Glow")
+Menu.Spacing()
+Menu.Spacing()
+Menu.Spacing()
+Menu.Text("Options")
+Menu.Separator()
+Menu.Checkbox("Visible Only", "snowGlowVischeck", false)
+Menu.Checkbox("fullBloom", "snowGlowFullbloom", false)
 Menu.SliderFloat('Opacity', 'snowGlowAlpha', 0.1, 1, 1.0, 1.0)
 Menu.SliderFloat('Bloom', 'snowGlowBloom', 0.1, 1, 1.0, 1.0)
+Menu.InputFloat("Testval", "snowGlowTest", 0.5)
 Menu.Combo('Style', 'snowGlowStyle', {"Full", "Inline + Flicker", "Inline Glow", "Flicker"}, 0)
 Menu.Combo('Color Style', 'snowGlowClrStyle', {"Rainbow", "Health"}, 0)
 
@@ -38,7 +50,7 @@ function memoryInfo.WriteColor(clr)
     memoryInfo.WriteFloat(clr.b)
 end
 
-function WriteGlow(player, clr, style)
+function WriteGlow(player, clr, style, fullBloom)
     memoryInfo.pos = glowObjManager + ((player:GetPropInt(glowIdxOffset) * 56) + 4)
 
     local floatClr = ColorToFloat(clr)
@@ -50,7 +62,7 @@ function WriteGlow(player, clr, style)
     memoryInfo.Pad(4)
     memoryInfo.WriteBool(true)
     memoryInfo.WriteBool(false)
-    memoryInfo.WriteBool(false)
+    memoryInfo.WriteBool(fullBloom)
     memoryInfo.Pad(5)
     memoryInfo.WriteInt(style)
 end
@@ -65,11 +77,27 @@ Hack.RegisterCallback("DrawModelExecute", function ()
 
     local rainbow = Color.new(r,g,b,Menu.GetFloat("snowGlowAlpha")*255)
 
+    local pLocal = IEntityList.GetPlayer(IEngine.GetLocalPlayer())
+    if not pLocal then return end
+
     for i = 1, 64 do
         local pEnt = IEntityList.GetPlayer(i)
         if not pEnt or pEnt:IsTeammate() then goto skip end
-        local pLocal = IEntityList.GetPlayer(IEngine.GetLocalPlayer())
-        if not pLocal then return end
+
+        local hit = trace_t.new()
+        Utils.TraceLine(pLocal:GetEyePos(), pEnt:GetEyePos(), 24705, pLocal, hit)
+        local hitEnt = IEntityList.ToPlayer(hit.hit_entity)
+        if not hitEnt then goto skip end
+        local canSee = hitEnt:GetAbsOrigin() == pEnt:GetAbsOrigin()
+
+        if not canSee then
+            local hit = trace_t.new()
+            Utils.TraceLine(hitEnt:GetEyePos(), pEnt:GetEyePos(), 24705, hitEnt, hit)
+            local hitEnt = IEntityList.ToPlayer(hit.hit_entity)
+            if not hitEnt then goto skipif end
+            if hitEnt:GetAbsOrigin() == pEnt:GetAbsOrigin() then canSee = true end
+            ::skipif::
+        end
 
         local health = pEnt:GetPropInt(m_iHealth)
         local healthAmnt = 255/100
@@ -78,7 +106,7 @@ Hack.RegisterCallback("DrawModelExecute", function ()
         local wantedClr = healthGlow
         if Menu.GetInt("snowGlowClrStyle") == 0 then wantedClr = rainbow end
 
-        WriteGlow(pEnt, wantedClr, Menu.GetInt("snowGlowStyle"))
+        if (not canSee and not Menu.GetBool("snowGlowVischeck")) or canSee then WriteGlow(pEnt, wantedClr, Menu.GetInt("snowGlowStyle"), Menu.GetBool("snowGlowFullbloom")) end
 
         ::skip::
     end
