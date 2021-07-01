@@ -10,7 +10,7 @@ Menu.Separator()
 Menu.Checkbox("Hide game status", "snowRPHidden", false)
 
 --Do autoupdating
-local currentVer = "1.0"
+local currentVer = "1.1"
 local appdir = GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\RichPresence\\"
 local verdir = GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\"
 local luadir = GetAppData() .. "\\INTERIUM\\CSGO\\Lua\\"
