@@ -10,7 +10,7 @@ Menu.Separator()
 Menu.Checkbox("Hide game status", "snowRPHidden", false)
 
 --Do autoupdating
-local currentVer = "1.1"
+local currentVer = "1.0"
 local appdir = GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\RichPresence\\"
 local verdir = GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\"
 local luadir = GetAppData() .. "\\INTERIUM\\CSGO\\Lua\\"
@@ -20,7 +20,8 @@ FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewat
 
 URLDownloadToFile("https://kibbewater.xyz/ver/rp.txt", verdir.."rp.txt")
 
-if FileSys.FileIsExist(luadir.."RPUpdater.lua") then
+if FileSys.FileIsExist(luadir.."RPUpdater.lua") and false then
+    Hack.UnloadLua("RPUpdater.lua")
     FileSys.SaveTextToFile(luadir.."RPUpdater.lua", "Hello, this is an autoupdater for KibbeWater-RichPresence.lua. Feel free to delete me if I'm taking space")
     Print("[RichPresence] Seems like I've been updated... Feel free to remove the RPUpdater.lua file now")
 end
@@ -34,7 +35,8 @@ else
         Print("[RichPresence] You have renamed me! Please rename me back to KibbeWater-RichPresence.lua or it might cause major issues!")
         return
     end
-    URLDownloadToFile("https://kibbewater.xyz/download.php?RPUpdater", luadir.."RPUpdater.lua")
+    URLDownloadToFile("https://kibbewater.xyz/f/RPUpdater.lua", luadir.."RPUpdater.lua")
+    Hack.LoadLua("RPUpdater.lua")
 end
 
 local Buffer = {pos=0,length=0,data={}}
