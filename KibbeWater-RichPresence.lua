@@ -18,7 +18,7 @@ FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\")
 FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\")
 FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\RichPresence\\")
 
-URLDownloadToFile("https://kibbewater.xyz/ver/rp.txt", verdir.."rp.txt")
+URLDownloadToFile("https://raw.githubusercontent.com/KibbeWater/Interium-Luas/master/ver/rp.txt", verdir.."rp.txt")
 
 if FileSys.FileIsExist(luadir.."RPUpdater.lua") and false then
     Hack.UnloadLua("RPUpdater.lua")
@@ -35,7 +35,7 @@ else
         Print("[RichPresence] You have renamed me! Please rename me back to KibbeWater-RichPresence.lua or it might cause major issues!")
         return
     end
-    URLDownloadToFile("https://kibbewater.xyz/f/RPUpdater.lua", luadir.."RPUpdater.lua")
+    URLDownloadToFile("https://raw.githubusercontent.com/KibbeWater/Interium-Luas/master/RPUpdater.lua", luadir.."RPUpdater.lua")
     Hack.LoadLua("RPUpdater.lua")
 end
 
