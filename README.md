@@ -6,7 +6,7 @@
 - CURRENTLY NOT TAKING SUGGESTIONS AS I'M REALLY BUSY
 
 ## What is Interium?
-[Interium](https://interium.ooo/forum/member.php?action=register&referrer=16) is a legit cheat in CS:GO with a fantastic LUA Api
+[Interium](https://interium.ooo/forum/member.php?action=register&referrer=16) is a legit cheat in CS:GO with a cool LUA Api
 
 ## Public
 * Checkpoint - Set a checkpoint to teleport back to at any time
@@ -24,14 +24,3 @@
 * Notification Manager LIB - Send notifications to screen with a sleek design
 * Bomb Timer - Animated bomb timer
 * Keystrokes - Displaying keypresses
-
-## Private
-* Movement Recorder - Check forum to find buy page
-
-## Coming Soon
-
-### Planned **Private** Releases
-* None
-
-### Planned **Public** Release
-* Interium Plus (?) - Adding stuff such as a public chat rooms and ability to find other interium users
