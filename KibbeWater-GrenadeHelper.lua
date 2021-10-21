@@ -1,3 +1,5 @@
+local isDev = Hack.GetUserName() == "KibbeWater" --Doesn't do fking anything but whatever, knock yourself out
+
 Menu.Spacing()
 Menu.Separator()
 Menu.Spacing()
@@ -6,7 +8,9 @@ Menu.Spacing()
 Menu.Spacing()
 Menu.Spacing()
 Menu.Checkbox("Draw Line To Angle", "cHelperDrawLineAngle", true)
-Menu.SliderInt("Render Distance", "cHelperRenderDistance", 50, 2000, "", 500)
+Menu.SliderInt("Render Distance", "cHelperRenderDistance", 50, 4000, 1, 1000)
+Menu.KeyBind("Auto-Align with closest point", "cHelperAlignKey", 78)
+if isDev then Menu.Checkbox("View Submissions (DEV)", "cHelperDevSubmissions", false) end
 Menu.Spacing()
 Menu.Spacing()
 Menu.Text("Publishing")
@@ -26,17 +30,18 @@ local loadedMap = ""
 --Global Vars
 local coords = {}
 
---For version handling
-local ver = "v2.0"
-local notifNew = false
-local notifData = ""
+--Aligner Vars
+local isAligning = false
+local isAiming = false
+local alignPos = Vector.new(0,0,0)
+local alignAng = QAngle.new(0,0,0)
 
 FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\")
 FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\")
 FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Grenade Helper\\")
 
 --Register Functions
-function Split (inputstr, sep)
+local function Split (inputstr, sep)
     if sep == nil then
             sep = "%s"
     end
@@ -47,7 +52,7 @@ function Split (inputstr, sep)
     return t
 end
 
-function SplitLiteral(inputstr, sep)
+local function SplitLiteral(inputstr, sep)
     if sep == nil then
             sep = "%s"
     end
@@ -58,16 +63,7 @@ function SplitLiteral(inputstr, sep)
     return t
 end
 
-function SendNotif(ID, type, title, msg, clr, r, g, b, expire)
-    local clrBool = "false"
-    if clr then clrBool = "true" end
-    if Menu.GetInt("NM_API_Enabled") > IGlobalVars.realtime then
-        Menu.SetString("NM_API_Payload", ID .. "*" .. type .. "*" .. title .. "*" .. msg .. "*" .. clrBool .. "*" .. r .. "*" .. g .. "*" .. b .. "*" .. (IGlobalVars.realtime + expire))
-        Menu.SetBool("NM_API_Send", true)
-    end
-end
-
-function Bool2String(boolz)
+local function Bool2String(boolz)
     if boolz then
         return "true"
     else
@@ -75,37 +71,39 @@ function Bool2String(boolz)
     end
 end
 
---Set initial settings
-function Setup()
-    Print("Downloading version file...")
-    URLDownloadToFile("https://kibbewater.xyz/ver/gh.txt", GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\gh.txt")
-    Print("Download finished")
-    if FileSys.FileIsExist(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\gh.txt") then
-        local fileData = FileSys.GetTextFromFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\gh.txt")
-        local data = Split(fileData, "\n")
-        Print("Recieved data: " .. data[1])
-        if #data == 2 then
-            if ver ~= data[1] and Menu.GetInt("NM_API_Enabled") > IGlobalVars.realtime and not Menu.GetBool("NM_API_Send") and Menu.GetString("NM_API_Payload") == "" then
-                Menu.SetString("NM_API_Payload", "GHUpdates" .. "*" .. "1" .. "*" .. "Grenade Helper Update" .. "*" .. "Please download " .. data[1] .. ", check forums for the latest update" .. "*" .. "false" .. "*" .. "0" .. "*" .. "0" .. "*" .. "0" .. "*" .. (IGlobalVars.realtime + 7))
-                Menu.SetBool("NM_API_Send", true)
-            elseif Menu.GetInt("NM_API_Enabled") < IGlobalVars.realtime or Menu.GetBool("NM_API_Send") or Menu.GetString("NM_API_Payload") ~= "" then
-                notifData = "GHUpdates" .. "*" .. "1" .. "*" .. "Grenade Helper Update" .. "*" .. "Please download " .. data[1] .. ", check forums for the latest update" .. "*" .. "false" .. "*" .. "0" .. "*" .. "0" .. "*" .. "0" .. "*"
-                notifNew = true
+local function Clamp(n, min, max)
+    if n < min then return min end
+    if n > max then return max end
+    return n
+end
+
+local function LineToObject(line)
+    local data = Split(line, "*")
+
+    return {data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8]}
+end
+
+local function FindClosest(pos, grenadeName)
+    local closestCoord = 0
+    local closestPos = Vector.new(0,0,0)
+    for i = 1, #coords do
+        if coords[i][3] == grenadeName then
+            local curPos = Vector.new(tonumber(coords[i][4]), tonumber(coords[i][5]), tonumber(coords[i][6]))
+
+            local distToCur = Math.VectorDistance(pos, curPos)
+            local distToClosest = Math.VectorDistance(pos, closestPos)
+
+            if distToCur < distToClosest or closestPos == Vector.new(0,0,0) then
+                closestCoord = i
+                closestPos = curPos
             end
         end
-    else
-        Print("File not recieved")
-        SendNotif("GHUpdates", 1, "Movement Recorder Update", "Error occured while getting current version", false, 0, 0, 0, IGlobalVars.realtime + 7)
     end
+
+    return closestCoord
 end
 
 Hack.RegisterCallback("PaintTraverse", function ()
-    if Menu.GetInt("NM_API_Enabled") > IGlobalVars.realtime and notifNew and not Menu.GetBool("NM_API_Send") and Menu.GetString("NM_API_Payload") == "" then
-        Menu.SetString("NM_API_Payload", notifData .. (IGlobalVars.realtime + 7))
-        Menu.SetBool("NM_API_Send", true)
-        notifNew = false
-    end
-
     if (not Utils.IsLocalAlive()) then return end
 
     if not Utils.IsInGame() then return end
@@ -125,15 +123,32 @@ Hack.RegisterCallback("PaintTraverse", function ()
     if wName ~= "" and map ~= "" and Menu.GetString("cSpotFName") ~= "" and Menu.GetBool("cSubmitGrenadeSpot") then
         local throwTypes = {"Throw", "RunThrow", "JumpThrow", "Right Click"}
         local pPos = pLocal:GetAbsOrigin()
-        --FileSys.SaveTextToFile("https://kibbewater.xyz/interium/submitspot.php?username=" .. Hack.GetUserName() .. "&map=" .. map .. "&location=" .. Menu.GetString("cSpotFName") .. "&throwtype=" .. throwTypes[Menu.GetInt("cSpotThrowType")+1] .. "&grenadetype=" .. wName .. "&x=" .. tostring(pPos.x) .. "&y=" .. tostring(pPos.y) .. "&z=" .. tostring(pPos.z) .. "&pitch=" .. tostring(viewAngle.pitch) .. "&yaw=" .. tostring(viewAngle.yaw))
         URLDownloadToFile("https://kibbewater.xyz/interium/submitspot.php?username=" .. Hack.GetUserName() .. "&map=" .. map .. "&location=" .. Menu.GetString("cSpotFName") .. "&throwtype=" .. throwTypes[Menu.GetInt("cSpotThrowType")+1] .. "&grenadetype=" .. wName .. "&x=" .. tostring(pPos.x) .. "&y=" .. tostring(pPos.y) .. "&z=" .. tostring(pPos.z) .. "&pitch=" .. tostring(viewAngle.pitch) .. "&yaw=" .. tostring(viewAngle.yaw), GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\http.txt")
         local data = FileSys.GetTextFromFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\http.txt")
         if data ~= "true" then
-            SendNotif("GHError", 1, "Submission Error", "Submission failed with '" .. data .. "'", false, 0, 0, 0, 7)
+            --Submission failed
         else
-            SendNotif("GH", 3, "Submission", "Thank you for your submitting '" .. Menu.GetString("cSpotFName") .. "'", false, 0, 0, 0, 7)
+            Menu.SetString("cSpotFName", "")
         end
         Menu.SetBool("cSubmitGrenadeSpot", false)
+    end
+
+    if InputSys.IsKeyPress(Menu.GetInt("cHelperAlignKey")) then
+        local cP = FindClosest(pLocal:GetAbsOrigin(), wName)
+
+        if cP ~= 0 then
+            local closestPos = Vector.new(tonumber(coords[cP][4]), tonumber(coords[cP][5]), tonumber(coords[cP][6]))
+            local closestAng = QAngle.new(tonumber(coords[cP][7]), tonumber(coords[cP][8]), 0)
+
+            local closestDist = Math.VectorDistance(localPos, closestPos)
+            if closestDist < 100 then
+                alignPos = closestPos
+                alignAng = closestAng
+                if isAiming then
+                    isAiming = false
+                else isAligning = not isAligning end
+            end
+        end
     end
 
     for i = 1, #coords do
@@ -174,7 +189,6 @@ Hack.RegisterCallback("PaintTraverse", function ()
                     else color = Color.new(255,0,0,255) end
                 
                     Render.Circle3D(pos, 100, radius, color)
-                    --Render.Circle(sCircle.x, sCircle.y, radius, color, 25, 2)
                 end
                 if Math.WorldToScreen(throwPos, screenThrow) and dist <= 5 then
                     if Math.WorldToScreen(throwPosText, screen) then Render.Text_1(string, screen.x, screen.y, 15, Color.new(255, 255, 255, 255), false, true) end
@@ -190,12 +204,6 @@ Hack.RegisterCallback("PaintTraverse", function ()
     end
 end)
 
-function LineToObject(line)
-    local data = Split(line, "*")
-
-    return {data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8]}
-end
-
 Hack.RegisterCallback("CreateMove", function (cmd, send)
     if (not Utils.IsInGame()) then 
         coords = {}
@@ -209,7 +217,9 @@ Hack.RegisterCallback("CreateMove", function (cmd, send)
 
     --Load Coords
     if map ~= loadedMap then 
-        URLDownloadToFile("https://kibbewater.xyz/interium/getspots.php?map=" .. map, GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Grenade Helper\\" .. map .. ".txt")
+        local apiEndpoint = "getspots"
+        if isDev and Menu.GetBool("cHelperDevSubmissions") then apiEndpoint = "getsubmissions" end
+        URLDownloadToFile("https://kibbewater.xyz/interium/" .. apiEndpoint .. ".php?map=" .. map, GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Grenade Helper\\" .. map .. ".txt")
         local data = FileSys.GetTextFromFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Grenade Helper\\" .. map .. ".txt"):gsub("<br>", "\n")
         local locations = Split(data, "\n")
         coords = {}
@@ -217,7 +227,72 @@ Hack.RegisterCallback("CreateMove", function (cmd, send)
             table.insert(coords, LineToObject(locations[i]))
         end
         loadedMap = map
+        isAligning = false
+    end
+
+    if (not Utils.IsLocalAlive()) then return end
+
+    local pLocal = IEntityList.GetPlayer(IEngine.GetLocalPlayer())
+    if not pLocal then return end
+
+    local localPos = pLocal:GetAbsOrigin()
+
+    if isAligning then
+        local wAng = QAngle.new(0,0,0)
+        Math.VectorAngles(Vector.new(alignPos.x - localPos.x, alignPos.y - localPos.y, alignPos.z - localPos.z), wAng)
+        
+        local dist = Math.VectorDistance(localPos, alignPos)
+        
+        if dist < 0.08 then
+            isAligning = false
+            isAiming = true
+        end
+        
+        local clientAng = QAngle.new(0,0,0)
+        IEngine.GetViewAngles(clientAng)
+
+        cmd.forwardmove = dist + 10
+        Utils.CorrectMovement(wAng, cmd, cmd.forwardmove, 0, false)
+    end
+
+    if isAiming then
+        Print("Aim1")
+        --View aligning
+        local oldVA = QAngle.new()
+        IEngine.GetViewAngles(oldVA)
+        Print("Aim2")
+        if alignAng.yaw - oldVA.yaw > 30 or alignAng.yaw - oldVA.yaw < -30 then
+            oldVA.yaw = oldVA.yaw + 360
+            if alignAng.yaw - oldVA.yaw > 30 or alignAng.yaw - oldVA.yaw < -30 then
+                oldVA.yaw = oldVA.yaw - 720
+            end
+        end
+        
+        local angDiff = ((alignAng.pitch+180) - (oldVA.pitch+180)) / 10
+        local angDiffYaw = 0
+
+        angDiffYaw = ((alignAng.yaw+180) - (oldVA.yaw+180)) / 10
+        if ((alignAng.yaw+180) - (oldVA.yaw+180)>(oldVA.yaw+180) + (360 - (alignAng.yaw+180))) then angDiffYaw = (((oldVA.yaw+180) + (360 - (alignAng.yaw+180)))*-1) / 10 end
+        
+        local clampAmount = 3
+        local clampAmountYaw = 2
+        
+        local angYaw = Clamp(angDiffYaw,clampAmountYaw*-1,clampAmountYaw)
+        local angPitch = Clamp(angDiff,clampAmount*-1,clampAmount)
+        
+        local newViewang = QAngle.new()
+        newViewang.roll = 0
+        newViewang.yaw = oldVA.yaw + angYaw
+        newViewang.pitch = oldVA.pitch + angPitch
+
+        
+
+        local dizt = Math.VectorDistance(localPos, alignPos)
+        Print(math.abs(angYaw) .. ", " .. math.abs(angPitch) .. "\necho dizt: " .. dizt)
+        if (math.abs(angYaw) <= 0.001 and math.abs(angPitch) <= 0.001) or dizt > 1 then isAiming = false end
+        
+        IEngine.SetViewAngles(newViewang)
     end
 end)
 
-Setup()
+--Setup()
