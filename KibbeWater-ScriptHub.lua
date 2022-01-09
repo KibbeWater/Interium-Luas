@@ -3,6 +3,12 @@ local appdataPath = GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\
 local configsPath = GetAppData() .. "\\INTERIUM\\CSGO\\Cfg\\"
 local scriptsPath = GetAppData() .. "\\INTERIUM\\CSGO\\Lua\\"
 
+FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\")
+FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\")
+FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\ScriptHub\\")
+FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\ScriptHub\\Configs\\")
+FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\ScriptHub\\Scripts\\")
+
 URLDownloadToFile("https://kibbewater.xyz/interium/scripthub_host.txt", appdataPath .. "host.txt")
 if not FileSys.FileIsExist(appdataPath .. "host.txt") then
     Print("[ScriptHub] Critical Error: Could not download host file!")
@@ -36,12 +42,6 @@ local pickupOffset = {x = 0, y = 0}
 -- GUI
 local clickables = {}
 local canClick = false
-
-FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\")
-FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\")
-FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\ScriptHub\\")
-FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\ScriptHub\\Configs\\")
-FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\ScriptHub\\Scripts\\")
 
 -- Internal API
 -- Clickables {[name] = {x, y, w, h, callback}}
