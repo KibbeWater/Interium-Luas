@@ -5,15 +5,17 @@ Menu.Spacing()
 Menu.Text("--=General Settings=--")
 Menu.Checkbox("Enable Graph", "cEnableGraph", true)
 Menu.Text("--=Graph Settings=--")
-Menu.SliderInt("Data Points", "cGraphPoints", 20, 100, "", 40)
-Menu.SliderInt("Speed", "cGraphSpeed", 1, 10, "", 1)
+Menu.SliderInt("Fade Percent", "cGraphFade", 0, 50, 1, 5)
+Menu.SliderInt("Data Points", "cGraphPoints", 50, 500, 1, 300)
+Menu.SliderFloat("Speed", "cGraphSpeed", 0.1, 10, 0.1, 0.5)
+Menu.Checkbox("Optimised Rendering", "cGraphOptimised", false)
 Menu.Checkbox("Enable Baseline", "cGraphBaseline", true)
-Menu.SliderInt("Baseline Thickness", "cGraphBaselineThicc", 1, 10, "", 2)
-Menu.SliderInt("Graph Line Thickness", "cGraphLinesThicc", 1, 10, "", 2)
-Menu.SliderInt("Graph Size X", "cGraphSizeX", 0, Globals.ScreenWidth(), "", 600)
-Menu.SliderInt("Graph Size Y", "cGraphSizeY", 0, Globals.ScreenHeight(), "", 100)
-Menu.SliderInt("Graph Pos X", "cGraphPosX", 0, Globals.ScreenWidth(), "", (Globals.ScreenWidth() / 2) - 300)
-Menu.SliderInt("Graph Pos Y", "cGraphPosY", 0, Globals.ScreenHeight(), "", ((Globals.ScreenHeight()/4)*3.2))
+Menu.SliderInt("Baseline Thickness", "cGraphBaselineThicc", 1, 10, 1, 2)
+Menu.SliderInt("Graph Line Thickness", "cGraphLinesThicc", 1, 10, 1, 1)
+Menu.SliderInt("Graph Size X", "cGraphSizeX", 0, Globals.ScreenWidth(), 1, 600)
+Menu.SliderInt("Graph Size Y", "cGraphSizeY", 0, Globals.ScreenHeight(), 1, 100)
+Menu.SliderInt("Graph Pos X", "cGraphPosX", 0, Globals.ScreenWidth(), 1, (Globals.ScreenWidth() / 2) - 300)
+Menu.SliderInt("Graph Pos Y", "cGraphPosY", 0, Globals.ScreenHeight(), 1, ((Globals.ScreenHeight()/4)*3.2))
 Menu.Button("Align To Middle", "cGraphAlign")
 Menu.Text("--=Graph Colors=--")
 Menu.ColorPicker("Baseline Color", "cGraphBaselineColor", 255, 255, 255, 255)
@@ -35,8 +37,8 @@ local vVelocity_Offset = Hack.GetOffset("DT_BasePlayer", "m_vecVelocity[0]")
 local ON_GROUND = 0
 
 local OPoints = Menu.GetInt("cGraphPoints")
-local OSpeed = Menu.GetInt("cGraphSpeed")
-local OVel = IEntityList.GetPlayer(IEngine.GetLocalPlayer()):GetPropVector(vVelocity_Offset)
+local OSpeed = Menu.GetFloat("cGraphSpeed")
+local OVel = Vector.new(0, 0, 0)
 local OGround = true
 local NextJB = false
 
@@ -55,7 +57,7 @@ Hack.RegisterCallback("PaintTraverse", function ()
         local GraphPosX = Menu.GetInt("cGraphPosX")
         local GraphPosY = Menu.GetInt("cGraphPosY")
         local DatapointsSize = Menu.GetInt("cGraphPoints")
-        local speed = Menu.GetInt("cGraphSpeed")
+        local speed = Menu.GetFloat("cGraphSpeed")
 
         --TODO: make it fucking work you lazy ass mother fucking egoed ass coder bitch
         if Menu.GetBool("cGraphAlign") then
@@ -90,10 +92,9 @@ Hack.RegisterCallback("PaintTraverse", function ()
 
         --Only kibbes brain got injured during these calculations
         --Oh yeah start calculating pos for every point in given size
-        local amountOfPointsToFade = DatapointsSize / 20
-        local pointsFaded = 0
-        local fadePerPoint = amountOfPointsToFade / 255
-        local fadingEnd = false
+        local amountOfPointsToFade = math.floor(DatapointsSize * (Menu.GetInt("cGraphFade") / 100))
+        local fadePerPoint = 255 / amountOfPointsToFade
+        local polyIdx = 0
         for i = 1, DatapointsSize do
             if i < DatapointsSize then
                 local lineX = ((GraphSizeX / #DatapointsY ) * (i - 1)) + GraphPosX
@@ -101,10 +102,33 @@ Hack.RegisterCallback("PaintTraverse", function ()
                 local lineX2 = ((GraphSizeX / #DatapointsY) * (i + 0)) + GraphPosX
                 local lineY2 = GraphPosY + ((GraphSizeY / 300) * (300 - DatapointsY[i + 1]))
                 local clr = Menu.GetColor("cGraphColor")
-                Render.Line(lineX, lineY, lineX2, lineY2, clr, Menu.GetInt("cGraphLinesThicc"))
+
+                -- Check if it's a beginning or a end fade
+                local isFade = false
+                if i <= amountOfPointsToFade then
+                    clr.a = math.floor(255 - (fadePerPoint * (amountOfPointsToFade - i)))
+                    isFade = true
+                elseif i >= DatapointsSize - amountOfPointsToFade then
+                    clr.a = math.floor(255 - (fadePerPoint * (amountOfPointsToFade - (DatapointsSize - i))))
+                    isFade = true
+                end
+
+                -- Check if next iteration is gonna fade, if it does then Print("Fade")
+                
+                if isFade or not Menu.GetBool("cGraphOptimised") then Render.Line(lineX, lineY, lineX2, lineY2, clr, Menu.GetInt("cGraphLinesThicc")) end
+
+                if Menu.GetBool("cGraphOptimised") then
+                    Render.AddPoly(polyIdx, lineX, lineY)
+                    polyIdx = polyIdx + 1
+                    if i + 1 <= amountOfPointsToFade or i + 1 >= DatapointsSize - amountOfPointsToFade then
+                        Render.AddPoly(polyIdx, lineX2, lineY2)
+                        Render.Poly(polyIdx + 1, clr, false, Menu.GetInt("cGraphLinesThicc"))
+                        polyIdx = 0
+                    end
+                end
+
                 if DatapointsData[i] == 1 then Render.Text_1("JB", lineX - 5, lineY, 30, Color.new(255, 255, 255, 255), false, true) end
                 if DatapointsData[i] == 1 and i >= 3 then DatapointsData[i] = 0 end
-                if i > DatapointsSize - amountOfPointsToFade then fadingEnd = true end
             end
         end
 
@@ -119,7 +143,7 @@ Hack.RegisterCallback("CreateMove", function ()
     local vVelocity = pLocal:GetPropVector(vVelocity_Offset)
     local Flags = pLocal:GetPropInt(fFlags_Offset)
 
-    local speed = Menu.GetInt("cGraphSpeed")
+    local speed = Menu.GetFloat("cGraphSpeed")
     local DatapointsSize = Menu.GetInt("cGraphPoints")
 
     if nextExecutionTick <= tick then
@@ -133,7 +157,6 @@ Hack.RegisterCallback("CreateMove", function ()
             end
         end
         for i = 1, #DatapointsData do
-            if DatapointsData[i] == 1 then Print("Detected JB at " .. i) end
             if i ~= 1 then
                 tempData[i - 1] = DatapointsData[i]
             end
@@ -144,7 +167,6 @@ Hack.RegisterCallback("CreateMove", function ()
         DatapointsY[#DatapointsY+1] = vel
         if NextJB then
             DatapointsData[#DatapointsData] = 1
-            Print("Inserted JB at " .. #DatapointsData)
             NextJB = false
         end
         nextExecutionTick = tick + speed
@@ -159,7 +181,6 @@ function init()
         DatapointsY[i] = 0
         DatapointsData[i] = 0
     end
-    Print("Initializing " .. Menu.GetInt("cGraphPoints") .. " Points")
 end
 
 function Velocity(vVel)
