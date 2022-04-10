@@ -123,7 +123,7 @@ Hack.RegisterCallback("PaintTraverse", function ()
     if wName ~= "" and map ~= "" and Menu.GetString("cSpotFName") ~= "" and Menu.GetBool("cSubmitGrenadeSpot") then
         local throwTypes = {"Throw", "RunThrow", "JumpThrow", "Right Click"}
         local pPos = pLocal:GetAbsOrigin()
-        URLDownloadToFile("https://kibbewater.xyz/interium/submitspot.php?username=" .. Hack.GetUserName() .. "&map=" .. map .. "&location=" .. Menu.GetString("cSpotFName") .. "&throwtype=" .. throwTypes[Menu.GetInt("cSpotThrowType")+1] .. "&grenadetype=" .. wName .. "&x=" .. tostring(pPos.x) .. "&y=" .. tostring(pPos.y) .. "&z=" .. tostring(pPos.z) .. "&pitch=" .. tostring(viewAngle.pitch) .. "&yaw=" .. tostring(viewAngle.yaw), GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\http.txt")
+        URLDownloadToFile("https://old.kibbewater.xyz/interium/submitspot.php?username=" .. Hack.GetUserName() .. "&map=" .. map .. "&location=" .. Menu.GetString("cSpotFName") .. "&throwtype=" .. throwTypes[Menu.GetInt("cSpotThrowType")+1] .. "&grenadetype=" .. wName .. "&x=" .. tostring(pPos.x) .. "&y=" .. tostring(pPos.y) .. "&z=" .. tostring(pPos.z) .. "&pitch=" .. tostring(viewAngle.pitch) .. "&yaw=" .. tostring(viewAngle.yaw), GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\http.txt")
         local data = FileSys.GetTextFromFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\http.txt")
         if data ~= "true" then
             --Submission failed
@@ -219,7 +219,7 @@ Hack.RegisterCallback("CreateMove", function (cmd, send)
     if map ~= loadedMap then 
         local apiEndpoint = "getspots"
         if isDev and Menu.GetBool("cHelperDevSubmissions") then apiEndpoint = "getsubmissions" end
-        URLDownloadToFile("https://kibbewater.xyz/interium/" .. apiEndpoint .. ".php?map=" .. map, GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Grenade Helper\\" .. map .. ".txt")
+        URLDownloadToFile("https://old.kibbewater.xyz/interium/" .. apiEndpoint .. ".php?map=" .. map, GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Grenade Helper\\" .. map .. ".txt")
         local data = FileSys.GetTextFromFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Grenade Helper\\" .. map .. ".txt"):gsub("<br>", "\n")
         local locations = Split(data, "\n")
         coords = {}
