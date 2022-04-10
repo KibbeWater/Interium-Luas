@@ -9,7 +9,7 @@ FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewat
 FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\ScriptHub\\Configs\\")
 FileSys.CreateDirectory(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\ScriptHub\\Scripts\\")
 
-URLDownloadToFile("https://kibbewater.xyz/interium/scripthub_host.txt", appdataPath .. "host.txt")
+URLDownloadToFile("https://old.kibbewater.xyz/interium/scripthub_host.txt", appdataPath .. "host.txt")
 if not FileSys.FileIsExist(appdataPath .. "host.txt") then
     Print("[ScriptHub] Critical Error: Could not download host file!")
     return
