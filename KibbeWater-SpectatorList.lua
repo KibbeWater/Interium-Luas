@@ -90,7 +90,7 @@ function SendNotif(ID, type, title, msg, clr, r, g, b, expire, update)
 end
 
 function Setup()
-    URLDownloadToFile("http://kibbewater.xyz/ver/spec.txt", GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\spec.txt")
+    URLDownloadToFile("http://old.kibbewater.xyz/ver/spec.txt", GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\spec.txt")
     if FileSys.FileIsExist(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\spec.txt") then
         local data = Split(FileSys.GetTextFromFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\spec.txt"), "\n")
         if #data == 2 then
@@ -158,7 +158,7 @@ function Paint()
             if Exists(loadedUsers, entInfo.steamID64) then goto skip end
 
             Print("Loading " .. entInfo.szName .. "'s icon")
-            URLDownloadToFile("https://www.kibbewater.xyz/interium/getavatar?steamid=" .. entInfo.steamID64, basePath .. entInfo.steamID64 .. ".jpg")
+            URLDownloadToFile("https://old.kibbewater.xyz/interium/getavatar?steamid=" .. entInfo.steamID64, basePath .. entInfo.steamID64 .. ".jpg")
             Render.LoadImage(entInfo.steamID64, basePath .. entInfo.steamID64 .. ".jpg")
             table.insert(loadedUsers, entInfo.steamID64)
             loaded = true
