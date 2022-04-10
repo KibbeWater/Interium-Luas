@@ -111,7 +111,7 @@ function Setup()
 
         ::continue::
     end
-    URLDownloadToFile("http://kibbewater.ml/ver/ag.txt", GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\ag.txt")
+    URLDownloadToFile("http://old.kibbewater.xyz/ver/ag.txt", GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\ag.txt")
     if FileSys.FileIsExist(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\ag.txt") then
         local data = Split(FileSys.GetTextFromFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\ag.txt"), "\n")
         if #data == 2 then
