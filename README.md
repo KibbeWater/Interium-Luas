@@ -1,10 +1,5 @@
 # Interium Luas
 
-## Ideas?
-- If you have an idea please submit them to me on Discord. **@snow#2030**
-- If I decide to make it I'll add it to my github and you will recieve an encrypted copy
-- CURRENTLY NOT TAKING SUGGESTIONS AS I'M REALLY BUSY
-
 ## What is Interium?
 [Interium](https://interium.ooo/forum/member.php?action=register&referrer=16) is a legit cheat in CS:GO with a cool LUA Api
 
