@@ -11,6 +11,8 @@ Menu.Checkbox("Draw Line To Angle", "cHelperDrawLineAngle", true)
 Menu.SliderInt("Render Distance", "cHelperRenderDistance", 50, 4000, 1, 1000)
 Menu.KeyBind("Auto-Align with closest point", "cHelperAlignKey", 78)
 if isDev then Menu.Checkbox("View Submissions (DEV)", "cHelperDevSubmissions", false) end
+Menu.Checkbox("Reviewer Mode", "cReviewerMode", false)
+Menu.Checkbox("Disable Remote Spots", "cDisableRemote", false)
 Menu.Spacing()
 Menu.Spacing()
 Menu.Text("Publishing")
@@ -21,6 +23,10 @@ Menu.Checkbox("Submit Spot", "cSubmitGrenadeSpot", false)
 Menu.Spacing()
 Menu.Text("You need to hold a smoke/molotov to submit")
 Menu.Text("Abuse of the API will lead to a ban")
+
+local API_URL = "https://kibbewater.com/interium"
+local DATA_PATH = GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Grenade Helper\\"
+local HTTP_PATH = GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\http.txt"
 
 local viewAngle = QAngle.new(0, 0, 0)
 local displayedID = 0
@@ -50,25 +56,6 @@ local function Split (inputstr, sep)
             table.insert(t, str)
     end
     return t
-end
-
-local function SplitLiteral(inputstr, sep)
-    if sep == nil then
-            sep = "%s"
-    end
-    local t={}
-    for str in string.gmatch(inputstr, "("..sep..")") do
-            table.insert(t, str)
-    end
-    return t
-end
-
-local function Bool2String(boolz)
-    if boolz then
-        return "true"
-    else
-        return "false"
-    end
 end
 
 local function Clamp(n, min, max)
@@ -123,8 +110,8 @@ Hack.RegisterCallback("PaintTraverse", function ()
     if wName ~= "" and map ~= "" and Menu.GetString("cSpotFName") ~= "" and Menu.GetBool("cSubmitGrenadeSpot") then
         local throwTypes = {"Throw", "RunThrow", "JumpThrow", "Right Click"}
         local pPos = pLocal:GetAbsOrigin()
-        URLDownloadToFile("https://old.kibbewater.xyz/interium/submitspot.php?username=" .. Hack.GetUserName() .. "&map=" .. map .. "&location=" .. Menu.GetString("cSpotFName") .. "&throwtype=" .. throwTypes[Menu.GetInt("cSpotThrowType")+1] .. "&grenadetype=" .. wName .. "&x=" .. tostring(pPos.x) .. "&y=" .. tostring(pPos.y) .. "&z=" .. tostring(pPos.z) .. "&pitch=" .. tostring(viewAngle.pitch) .. "&yaw=" .. tostring(viewAngle.yaw), GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\http.txt")
-        local data = FileSys.GetTextFromFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\http.txt")
+        URLDownloadToFile(API_URL .. "/submitspot.php?username=" .. Hack.GetUserName() .. "&map=" .. map .. "&location=" .. Menu.GetString("cSpotFName") .. "&throwtype=" .. throwTypes[Menu.GetInt("cSpotThrowType")+1] .. "&grenadetype=" .. wName .. "&x=" .. tostring(pPos.x) .. "&y=" .. tostring(pPos.y) .. "&z=" .. tostring(pPos.z) .. "&pitch=" .. tostring(viewAngle.pitch) .. "&yaw=" .. tostring(viewAngle.yaw), HTTP_PATH)
+        local data = FileSys.GetTextFromFile(HTTP_PATH)
         if data ~= "true" then
             --Submission failed
         else
@@ -204,23 +191,43 @@ Hack.RegisterCallback("PaintTraverse", function ()
     end
 end)
 
+local lastForcedUpdate = 0
+local forceGrenadeUpdate = false
+local oldDisableRemote = false
 Hack.RegisterCallback("CreateMove", function (cmd, send)
-    if (not Utils.IsInGame()) then 
+    if not Utils.IsInGame() then 
         coords = {}
         displayedID = 0
         loadedMap = ""
+        return
     end
-    if (not Utils.IsLocal()) then return end
+    if not Utils.IsLocal() then return end
 
     map = IEngine.GetLevelNameShort()
     viewAngle = cmd.viewangles
 
+    if lastForcedUpdate + 0.5 < IGlobalVars.realtime and Menu.GetBool("cReviewerMode") then forceGrenadeUpdate = true end
+    if oldDisableRemote ~= Menu.GetBool("cDisableRemote") then forceGrenadeUpdate = true end
+
     --Load Coords
-    if map ~= loadedMap then 
+    if map ~= loadedMap or forceGrenadeUpdate then 
         local apiEndpoint = "getspots"
+
         if isDev and Menu.GetBool("cHelperDevSubmissions") then apiEndpoint = "getsubmissions" end
-        URLDownloadToFile("https://old.kibbewater.xyz/interium/" .. apiEndpoint .. ".php?map=" .. map, GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Grenade Helper\\" .. map .. ".txt")
-        local data = FileSys.GetTextFromFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Grenade Helper\\" .. map .. ".txt"):gsub("<br>", "\n")
+
+        if map ~= loadedMap and not Menu.GetBool("cDisableRemote") then URLDownloadToFile(API_URL .. "/" .. apiEndpoint .. ".php?map=" .. map, DATA_PATH .. map .. ".txt") end
+        
+        local data = ""
+        if not Menu.GetBool("cDisableRemote") then data = FileSys.GetTextFromFile(DATA_PATH .. map .. ".txt"):gsub("<br>", "\n") end
+
+        local custom = ""
+        if FileSys.FileIsExist(DATA_PATH .. map .. "_custom.txt") then custom = FileSys.GetTextFromFile(DATA_PATH .. map .. "_custom.txt"):gsub("<br>", "\n") end
+        local reviewer = ""
+        if FileSys.FileIsExist(DATA_PATH .. map .. "_review.txt") then reviewer = FileSys.GetTextFromFile(DATA_PATH .. map .. "_review.txt"):gsub("<br>", "\n") end
+        
+        if custom ~= "" then if data ~= "" then data = data .. "\n" .. custom else data = custom end end
+        if reviewer ~= "" then if data ~= "" then data = data .. "\n" .. reviewer else data = reviewer end end
+
         local locations = Split(data, "\n")
         coords = {}
         for i = 1, #locations do
@@ -228,9 +235,14 @@ Hack.RegisterCallback("CreateMove", function (cmd, send)
         end
         loadedMap = map
         isAligning = false
+
+        forceGrenadeUpdate = false
+        lastForcedUpdate = IGlobalVars.realtime
     end
 
-    if (not Utils.IsLocalAlive()) then return end
+    oldDisableRemote = Menu.GetBool("cDisableRemote")
+
+    if not Utils.IsLocalAlive() then return end
 
     local pLocal = IEntityList.GetPlayer(IEngine.GetLocalPlayer())
     if not pLocal then return end
@@ -256,11 +268,10 @@ Hack.RegisterCallback("CreateMove", function (cmd, send)
     end
 
     if isAiming then
-        Print("Aim1")
         --View aligning
         local oldVA = QAngle.new()
         IEngine.GetViewAngles(oldVA)
-        Print("Aim2")
+        
         if alignAng.yaw - oldVA.yaw > 30 or alignAng.yaw - oldVA.yaw < -30 then
             oldVA.yaw = oldVA.yaw + 360
             if alignAng.yaw - oldVA.yaw > 30 or alignAng.yaw - oldVA.yaw < -30 then
@@ -288,11 +299,8 @@ Hack.RegisterCallback("CreateMove", function (cmd, send)
         
 
         local dizt = Math.VectorDistance(localPos, alignPos)
-        Print(math.abs(angYaw) .. ", " .. math.abs(angPitch) .. "\necho dizt: " .. dizt)
         if (math.abs(angYaw) <= 0.001 and math.abs(angPitch) <= 0.001) or dizt > 1 then isAiming = false end
         
         IEngine.SetViewAngles(newViewang)
     end
 end)
-
---Setup()
