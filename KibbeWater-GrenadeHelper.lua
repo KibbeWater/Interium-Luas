@@ -194,6 +194,7 @@ end)
 local lastForcedUpdate = 0
 local forceGrenadeUpdate = false
 local oldDisableRemote = false
+local oldReviewMode = false
 Hack.RegisterCallback("CreateMove", function (cmd, send)
     if not Utils.IsInGame() then 
         coords = {}
@@ -206,7 +207,9 @@ Hack.RegisterCallback("CreateMove", function (cmd, send)
     map = IEngine.GetLevelNameShort()
     viewAngle = cmd.viewangles
 
-    if lastForcedUpdate + 0.5 < IGlobalVars.realtime and Menu.GetBool("cReviewerMode") then forceGrenadeUpdate = true end
+    if (lastForcedUpdate + 0.5 < IGlobalVars.realtime and Menu.GetBool("cReviewerMode")) or (Menu.GetBool("cReviewerMode") ~= oldReviewMode) then 
+        forceGrenadeUpdate = true 
+    end
     if oldDisableRemote ~= Menu.GetBool("cDisableRemote") then forceGrenadeUpdate = true end
 
     --Load Coords
@@ -219,28 +222,33 @@ Hack.RegisterCallback("CreateMove", function (cmd, send)
         
         local data = ""
         if not Menu.GetBool("cDisableRemote") then data = FileSys.GetTextFromFile(DATA_PATH .. map .. ".txt"):gsub("<br>", "\n") end
-
+        
         local custom = ""
         if FileSys.FileIsExist(DATA_PATH .. map .. "_custom.txt") then custom = FileSys.GetTextFromFile(DATA_PATH .. map .. "_custom.txt"):gsub("<br>", "\n") end
         local reviewer = ""
-        if FileSys.FileIsExist(DATA_PATH .. map .. "_review.txt") then reviewer = FileSys.GetTextFromFile(DATA_PATH .. map .. "_review.txt"):gsub("<br>", "\n") end
+        if FileSys.FileIsExist(DATA_PATH .. map .. "_review.txt") and Menu.GetBool("cReviewerMode") then reviewer = FileSys.GetTextFromFile(DATA_PATH .. map .. "_review.txt"):gsub("<br>", "\n") end
         
         if custom ~= "" then if data ~= "" then data = data .. "\n" .. custom else data = custom end end
         if reviewer ~= "" then if data ~= "" then data = data .. "\n" .. reviewer else data = reviewer end end
-
+        
         local locations = Split(data, "\n")
         coords = {}
+        
         for i = 1, #locations do
-            table.insert(coords, LineToObject(locations[i]))
+            if #Split(locations[i], "*") == 8 then
+                table.insert(coords, LineToObject(locations[i]))
+            end
         end
         loadedMap = map
         isAligning = false
 
+        
         forceGrenadeUpdate = false
         lastForcedUpdate = IGlobalVars.realtime
     end
 
     oldDisableRemote = Menu.GetBool("cDisableRemote")
+    oldReviewMode = Menu.GetBool("cReviewerMode")
 
     if not Utils.IsLocalAlive() then return end
 
