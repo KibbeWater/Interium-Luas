@@ -235,7 +235,7 @@ Hack.RegisterCallback("CreateMove", function (cmd, send)
         coords = {}
         
         for i = 1, #locations do
-            if #Split(locations[i], "*") == 8 then
+            if #Split(locations[i], "*") >= 8 then
                 table.insert(coords, LineToObject(locations[i]))
             end
         end
