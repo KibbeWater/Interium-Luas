@@ -26,8 +26,8 @@ function Split (inputstr, sep)
 end
 
 --Setup Fonts
-URLDownloadToFile("https://cdn.discordapp.com/attachments/655694082525364254/700274099775078410/Sunflower.ttf", GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Sunflower.ttf")
-Render.LoadFont("sunflowerrr", GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Sunflower.ttf", 30)
+--URLDownloadToFile("https://cdn.discordapp.com/attachments/655694082525364254/700274099775078410/Sunflower.ttf", GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Sunflower.ttf")
+--Render.LoadFont("sunflowerrr", GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Sunflower.ttf", 30)
 
 --Debug
 local fakeNames = {} --This is permanent now? ok
@@ -158,7 +158,7 @@ function Paint()
             if Exists(loadedUsers, entInfo.steamID64) then goto skip end
 
             Print("Loading " .. entInfo.szName .. "'s icon")
-            URLDownloadToFile("https://old.kibbewater.xyz/interium/getavatar?steamid=" .. entInfo.steamID64, basePath .. entInfo.steamID64 .. ".jpg")
+            URLDownloadToFile("https://kibbewater.com/interium/getavatar?steamid=" .. entInfo.steamID64, basePath .. entInfo.steamID64 .. ".jpg")
             Render.LoadImage(entInfo.steamID64, basePath .. entInfo.steamID64 .. ".jpg")
             table.insert(loadedUsers, entInfo.steamID64)
             loaded = true
@@ -213,8 +213,8 @@ function Paint()
         Render.RectFilled(posX, posY, posX + sizeX, posY + sizeY, Color.new(0,0,0,255), 0)
 
         --Render Speclist Text
-        local textYSize = Render.CalcTextSize("Spectator List", sizeY * 0.6666666666666667, "sunflowerrr").y / 2
-        Render.Text("Spectator List", posX + (sizeX / 2), (posY + (sizeY / 2)) - textYSize, sizeY * 0.6666666666666667, Color.new(255,255,255,255), true, true, "sunflowerrr")
+        local textYSize = Render.CalcTextSize_1("Spectator List", sizeY * 0.6666666666666667).y / 2
+        Render.Text_1("Spectator List", posX + (sizeX / 2), (posY + (sizeY / 2)) - textYSize, sizeY * 0.6666666666666667, Color.new(255,255,255,255), true, true)
 
         --Dragging System
         local cursor = InputSys.GetCursorPos()
@@ -239,7 +239,7 @@ function Paint()
         local extensionSizeY = 0
         for i = 1, #fakeNames do
             extensionSizeY = extensionSizeY + 2
-            extensionSizeY = extensionSizeY + Render.CalcTextSize(fakeNames[i], 15, "sunflowerrr").y
+            extensionSizeY = extensionSizeY + Render.CalcTextSize_1(fakeNames[i], 15).y
         end
         if #fakeNames ~= 0 then
             extensionSizeY = extensionSizeY + 2
@@ -265,8 +265,8 @@ function Paint()
         extensionSizeY = 0
         for i = 1, #fakeNames do
             extensionSizeY = extensionSizeY + 2
-            Render.Text(fakeNames[i], posX + 6, ((posY + sizeY)) + extensionSizeY, sizeY * 0.6296296296296296, Color.new(255,255,255,255), false, true, "sunflowerrr")
-            extensionSizeY = extensionSizeY + Render.CalcTextSize(fakeNames[i], sizeY * 0.6296296296296296, "sunflowerrr").y
+            Render.Text_1(fakeNames[i], posX + 6, ((posY + sizeY)) + extensionSizeY, sizeY * 0.6296296296296296, Color.new(255,255,255,255), false, true)
+            extensionSizeY = extensionSizeY + Render.CalcTextSize_1(fakeNames[i], sizeY * 0.6296296296296296).y
         end
     elseif Menu.GetInt("cSpecDesignPublic") == 1 then --Aimware
 
@@ -293,15 +293,15 @@ function Paint()
         Render.RectFilled(posX, posY + 23, posX + 200, posY + 24, Color.new(200,40,40,255), 0)
 
         --Render Header Text
-        local dotTextSize = Render.CalcTextSize_1("Spectators list", 15, "sunflower").y / 2
-        Render.Text_1("Spectators list", posX + 8, posY + (12 - dotTextSize), 15, Color.new(255,255,255,255), false, false, "sunflower")
+        local dotTextSize = Render.CalcTextSize_1("Spectators list", 15).y / 2
+        Render.Text_1("Spectators list", posX + 8, posY + (12 - dotTextSize), 15, Color.new(255,255,255,255), false, false)
 
         --Draw Extension
         local extensionSizeY = 0
 
         for i = 1, #fakeNames do
             extensionSizeY = extensionSizeY + 8
-            local textSizeS = Render.CalcTextSize_1(fakeNames[i], 14, "sunflower")
+            local textSizeS = Render.CalcTextSize_1(fakeNames[i], 14)
             extensionSizeY = extensionSizeY + textSizeS.y
         end
         extensionSizeY = extensionSizeY + 8
@@ -314,8 +314,8 @@ function Paint()
 
         for i = 1, #fakeNames do
             extensionSizeY = extensionSizeY + 8
-            local textSizeS = Render.CalcTextSize(fakeNames[i], 14, "sunflower")
-            Render.Text(fakeNames[i], posX + 6, posY + extensionSizeY + 24, 14, Color.new(255,255,255,255), false, false, "sunflower")
+            local textSizeS = Render.CalcTextSize_1(fakeNames[i], 14)
+            Render.Text_1(fakeNames[i], posX + 6, posY + extensionSizeY + 24, 14, Color.new(255,255,255,255), false, false)
             extensionSizeY = extensionSizeY + textSizeS.y
         end
         extensionSizeY = extensionSizeY + 8
@@ -364,7 +364,7 @@ function Paint()
 
         for i = 1, #fakeNames do
             extensionSizeY = extensionSizeY + 6
-            local textSizeS = Render.CalcTextSize(fakeNames[i], 16, "sunflower")
+            local textSizeS = Render.CalcTextSize_1(fakeNames[i], 16)
             extensionSizeY = extensionSizeY + textSizeS.y
         end
         extensionSizeY = extensionSizeY + 6
@@ -376,14 +376,14 @@ function Paint()
 
         for i = 1, #fakeNames do
             extensionSizeY = extensionSizeY + 6
-            local textSizeS = Render.CalcTextSize(fakeNames[i], 16, "sunflower")
-            Render.Text(fakeNames[i], posX + 6, posY + extensionSizeY + 16, 16, Color.new(255,255,255,255), false, false, "sunflower")
+            local textSizeS = Render.CalcTextSize_1(fakeNames[i], 16)
+            Render.Text_1(fakeNames[i], posX + 6, posY + extensionSizeY + 16, 16, Color.new(255,255,255,255), false, false)
             extensionSizeY = extensionSizeY + textSizeS.y
         end
         extensionSizeY = extensionSizeY + 6
 
     elseif Menu.GetInt("cSpecDesignPublic") == 3 then --Beta Custom
-        local textYSize = Render.CalcTextSize("Spectator List", 18, "sunflower").y / 5
+        local textYSize = Render.CalcTextSize_1("Spectator List", 18).y / 5
         Render.RectFilled(posX, posY, posX + sizeX, posY + sizeY, Color.new(0,0,0,opacity), 4)
         Render.Text_1("Spectator List", posX + sizeX / 2, posY + textYSize, 18, Color.new(255,255,255,opacity), true, true)
 
@@ -410,7 +410,7 @@ function Paint()
         local extensionSizeY = 0
         for i = 1, #fakeNames do
             extensionSizeY = extensionSizeY + 2
-            extensionSizeY = extensionSizeY + Render.CalcTextSize(fakeNames[i], 15, "sunflower").y
+            extensionSizeY = extensionSizeY + Render.CalcTextSize_1(fakeNames[i], 15).y
         end
         if #fakeNames ~= 0 then
             extensionSizeY = extensionSizeY + 2
@@ -438,8 +438,8 @@ function Paint()
         extensionSizeY = 0
         for i = 1, #fakeNames do
             extensionSizeY = extensionSizeY + 2
-            Render.Text_1(fakeNames[i], posX + sizeX / 2, ((posY + sizeY) + 1) + extensionSizeY, 17, Color.new(255,255,255,opacity), true, true, "sunflowerr")
-            extensionSizeY = extensionSizeY + Render.CalcTextSize(fakeNames[i], 15, "sunflowerr").y
+            Render.Text_1(fakeNames[i], posX + sizeX / 2, ((posY + sizeY) + 1) + extensionSizeY, 17, Color.new(255,255,255,opacity), true, true)
+            extensionSizeY = extensionSizeY + Render.CalcTextSize_1(fakeNames[i], 15).y
         end
 
         FileSys.SaveTextToFile(GetAppData() .. "\\INTERIUM\\CSGO\\FilesForLUA\\kibbewater\\Spectator List\\data.s", posX .. "," .. posY)
@@ -449,9 +449,9 @@ function Paint()
 
         for i = 1, #fakeNames do
             extensionSizeY = extensionSizeY + 2
-            local textSizeS = Render.CalcTextSize(fakeNames[i], 17, "sunflower")
-            Render.Text(fakeNames[i], Globals.ScreenWidth() - (textSizeS.x + 5), extensionSizeY, 17, Color.new(255,255,255,opacity), false, true, "sunflower")
-            extensionSizeY = extensionSizeY + Render.CalcTextSize(fakeNames[i], 17, "sunflower").y
+            local textSizeS = Render.CalcTextSize_1(fakeNames[i], 17)
+            Render.Text_1(fakeNames[i], Globals.ScreenWidth() - (textSizeS.x + 5), extensionSizeY, 17, Color.new(255,255,255,opacity), false, true)
+            extensionSizeY = extensionSizeY + Render.CalcTextSize_1(fakeNames[i], 17).y
         end
     elseif Menu.GetInt("cSpecDesignPublic") == 5 then --Sown v2
         --Dragging System
@@ -494,8 +494,8 @@ function Paint()
             end
 
             if not Menu.GetBool("cSownSpecLightMode") then Render.RectFilled(posX, posY,sizeX + posX, posY + sizeY, Color.new(0,0,0,opacity), 0) else Render.RectFilled(posX, posY,sizeX + posX, posY + sizeY, Color.new(255,255,255,opacity), 0) end
-            local dotTextSize = Render.CalcTextSize(Menu.GetString("cSownSpecEmptyText"), 17, "sunflower").y / 2
-            if not Menu.GetBool("cSownSpecLightMode") then Render.Text(Menu.GetString("cSownSpecEmptyText"), posX + (sizeX / 2), posY + ((sizeY / 2) - dotTextSize), 17, Color.new(255,255,255,opacity), true, true, "sunflower") else Render.Text(Menu.GetString("cSownSpecEmptyText"), posX + (sizeX / 2), posY + ((sizeY / 2) - dotTextSize), 17, Color.new(0,0,0,opacity), true, true, "sunflower") end
+            local dotTextSize = Render.CalcTextSize_1(Menu.GetString("cSownSpecEmptyText"), 17).y / 2
+            if not Menu.GetBool("cSownSpecLightMode") then Render.Text_1(Menu.GetString("cSownSpecEmptyText"), posX + (sizeX / 2), posY + ((sizeY / 2) - dotTextSize), 17, Color.new(255,255,255,opacity), true, true) else Render.Text_1(Menu.GetString("cSownSpecEmptyText"), posX + (sizeX / 2), posY + ((sizeY / 2) - dotTextSize), 17, Color.new(0,0,0,opacity), true, true) end
         end
 
         --Draw Extension
@@ -503,8 +503,8 @@ function Paint()
 
         for i = 1, #fakeNames do
             extensionSizeY = extensionSizeY + 2
-            local textSizeS = Render.CalcTextSize(fakeNames[i], 15, "sunflower")
-            extensionSizeY = extensionSizeY + Render.CalcTextSize(fakeNames[i], 15, "sunflower").y
+            local textSizeS = Render.CalcTextSize_1(fakeNames[i], 15)
+            extensionSizeY = extensionSizeY + Render.CalcTextSize_1(fakeNames[i], 15).y
         end
         extensionSizeY = extensionSizeY + 4
 
@@ -551,8 +551,8 @@ function Paint()
 
         for i = 1, #fakeNames do
             extensionSizeY = extensionSizeY + 2
-            if not Menu.GetBool("cSownSpecLightMode") then Render.Text(fakeNames[i], posX + 6, posY + extensionSizeY, 17, Color.new(255,255,255,255), false, true, "sunflower") else Render.Text(fakeNames[i], posX + 6, posY + extensionSizeY, 17, Color.new(0,0,0,255), false, true, "sunflower") end
-            extensionSizeY = extensionSizeY + Render.CalcTextSize(fakeNames[i], 15, "sunflower").y
+            if not Menu.GetBool("cSownSpecLightMode") then Render.Text_1(fakeNames[i], posX + 6, posY + extensionSizeY, 17, Color.new(255,255,255,255), false, true) else Render.Text_1(fakeNames[i], posX + 6, posY + extensionSizeY, 17, Color.new(0,0,0,255), false, true) end
+            extensionSizeY = extensionSizeY + Render.CalcTextSize_1(fakeNames[i], 15).y
         end
     elseif Menu.GetInt("cSpecDesignPublic") == 6 then
 
@@ -579,7 +579,7 @@ function Paint()
 
         for i = 1, #fakeNames do
             extensionSizeY = extensionSizeY + 6
-            local textSizeS = Render.CalcTextSize(fakeNames[i], 11, "sunflower")
+            local textSizeS = Render.CalcTextSize_1(fakeNames[i], 11)
             extensionSizeY = extensionSizeY + textSizeS.y + 6
         end
         extensionSizeY = extensionSizeY + 9
@@ -603,9 +603,9 @@ function Paint()
         for i = 1, #fakeNames do
             
             extensionSizeY = extensionSizeY + 6
-            local textSizeS = Render.CalcTextSize(fakeNames[i], 11, "sunflower")
+            local textSizeS = Render.CalcTextSize_1(fakeNames[i], 11)
             Render.RectFilled(posX+8+19, (posY + extensionSizeY + 18 + (textSizeS.y/2))-10, posX + 242, (posY + extensionSizeY + 18 + (textSizeS.y/2))+10, Color.new(18,18,18,255))
-            Render.Text(fakeNames[i], posX + 12 + 30, posY + extensionSizeY + 18, 11, Color.new(255,255,255,255), false, false, "sunflower")            
+            Render.Text_1(fakeNames[i], posX + 12 + 30, posY + extensionSizeY + 18, 11, Color.new(255,255,255,255), false, false)            
 
             local col = 11
 
